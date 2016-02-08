@@ -1,0 +1,13 @@
+#URL to access GenomeSpace instance
+gs_url = "madigs-ansible.ddns.net"
+
+#Filename of SSL certificate
+ssl_cert_filename = "tomcat.cer"
+
+#Amazon Credentials
+aws_access_id = ""
+aws_secret_key = ""
+
+#Dropbox Credentials
+dropbox_access_id = ""
+dropbox_secret_key = ""

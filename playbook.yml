@@ -1,0 +1,4 @@
+- hosts: nectar
+  remote_user: ubuntu
+  tasks:
+    - include: tasks/main.yml

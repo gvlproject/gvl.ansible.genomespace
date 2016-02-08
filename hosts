@@ -1,0 +1,6 @@
+[nectar]
+115.146.86.170
+
+[nectar:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/Documents/nectar/madi_nectar_keypair2.pem

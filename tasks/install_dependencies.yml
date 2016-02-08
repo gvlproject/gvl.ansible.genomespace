@@ -1,7 +1,4 @@
 ---
-- hosts: nectar
-  remote_user: ubuntu
-  tasks:
     #Tasks to install genomespace dependencies
 
     #apt-get update before any packages are installed
