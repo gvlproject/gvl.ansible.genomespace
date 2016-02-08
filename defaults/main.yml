@@ -1,13 +1,15 @@
 #URL to access GenomeSpace instance
-gs_url = "madigs-ansible.ddns.net"
+gs_url: "madigs-ansible.ddns.net"
 
 #Filename of SSL certificate
-ssl_cert_filename = "tomcat.cer"
+ssl_cert_filename: "tomcat.cer"
 
 #Amazon Credentials
-aws_access_id = ""
-aws_secret_key = ""
+aws_access_id: ""
+aws_secret_key: ""
 
 #Dropbox Credentials
-dropbox_access_id = ""
-dropbox_secret_key = ""
+dropbox_access_id: ""
+dropbox_secret_key: ""
+
+gs_download_link: "https://swift.rc.nectar.org.au:8888/v1/AUTH_eeafd30a213f4abaa6df7c0410b9111b/gs-backups/genomespace-backup-madi-040216.tar.gz?temp_url_sig=8ad7637a9114bbbcc738dd0d9c12f7b1f1b98159&temp_url_expires=1454994135"

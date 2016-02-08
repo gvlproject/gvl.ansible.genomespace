@@ -2,9 +2,9 @@
     #Tasks to install genomespace dependencies
 
     #apt-get update before any packages are installed
-    - name: "apt-get update"
-      apt: update_cache=yes
-      become: yes
+    # - name: "apt-get update"
+    #   apt: update_cache=yes
+    #   become: yes
 
     #check if java already installed
     - stat: path=/usr/lib/jvm/java-7-oracle
@@ -47,19 +47,24 @@
       become: yes
 
     #set environment variables - 4 files /.bashrc /.profile for ubuntu and root.
-    - name: "setting environment variables"
-      lineinfile: dest={{ item[0] }} line={{ item[1] }}
+    - name: "Setting environment variables"
+      become: yes
+      lineinfile: dest={{ item[0] }} line={{ item[1] }} state=present
       with_nested:
-        - ["~/.bashrc", "~/.profile", "/root/.bashrc", "/root/.profile"]
+        - ["/home/ubuntu/.bashrc", "/home/ubuntu/.profile", "/root/.bashrc", "/root/.profile"]
         - ["export JAVA_HOME=/usr/lib/jvm/java-7-oracle",
            "export JAVA_TOOL_OPTIONS=\"-Xmx4096m -XX:MaxPermSize=4096m\"",
            "export PATH=$JAVA_HOME/bin:$PATH",
            "export VIRGO_HOME=/mnt/genomespace/DEVDEPLOY/virgo"]
-      become: yes
 
-    # ensure new enviro variables are set
-    - name: "Setting environment variables"
-      command: "src ~/.bashrc"
+    # # ensure new enviro variables are set
+    # - name: "Setting environment variables"
+    #   shell: source /home/ubuntu/.bashrc
+
+    - name: source bashrc
+      shell: source /home/ubuntu/.bashrc
+      args:
+        executable: /bin/bash
 
 
 

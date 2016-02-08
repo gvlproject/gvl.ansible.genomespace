@@ -1,16 +1,30 @@
 ---
-# copy genome space code & unzip from backup
-# TODO: check what files need to go in ~/genomespace
+  # copy genome space code & unzip from backup
+  # TODO: check what files need to go in ~/genomespace
 
-#check if GenomeSpace already installed
-- stat: path=/mnt/genomespace
-  register: genomespace_dir
+  #check if GenomeSpace already installed
+  - stat: path=/mnt/genomespace/SRC
+    register: genomespace_src_dir
 
-- debug: msg="GenomeSpace has not been installed"
-  when: genomespace_dir.stat.isdir is not defined or not genomespace_dir.stat.isdir
+  - debug: msg="GenomeSpace has not been installed"
+    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
-- name: "Download GenomeSpace"
-  get_url: url="https://swift.rc.nectar.org.au:8888/v1/AUTH_eeafd30a213f4abaa6df7c0410b9111b/gs-backups/genomespace-backup-madi-040216.tar.gz?temp_url_sig=8ad7637a9114bbbcc738dd0d9c12f7b1f1b98159&temp_url_expires=1454994135"
-  when: genomespace_dir.stat.isdir is not defined or not genomespace_dir.stat.isdir
+  - name: "Download GenomeSpace"
+    get_url: url={{ gs_download_link }} dest="/mnt/genomespace-backup-madi-040216.tar.gz"
+    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
+    become: yes
+
+  # Unarchive a file that is already on the remote machine
+  - name: "Unpack GenomeSpace"
+    unarchive: src=/mnt/genomespace-backup-madi-040216.tar.gz dest=/mnt/ copy=no
+    become: yes
+    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
+    become: yes
+
+  #move file contents and remove lower level folder
+  - name: "Clean up"
+    command: mv /mnt/genomespace-backup-madi-040216 /mnt/genomespace
+    become: yes
+    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
 ...
