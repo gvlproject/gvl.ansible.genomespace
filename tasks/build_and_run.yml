@@ -1,0 +1,9 @@
+---
+  #build code
+
+  #copy war files into directory to auto deploy?
+  #NOTE: you need to remove splash!
+
+  #run server
+
+...
