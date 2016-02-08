@@ -1,0 +1,70 @@
+---
+- hosts: nectar
+  remote_user: ubuntu
+  tasks:
+    #Tasks to install genomespace dependencies
+
+    #apt-get update before any packages are installed
+    - name: "apt-get update"
+      apt: update_cache=yes
+      become: yes
+
+    #check if java already installed
+    - stat: path=/usr/lib/jvm/java-7-oracle
+      register: p
+    - debug: msg="Java has not been installed"
+      when: p.stat.isdir is not defined or not p.stat.isdir
+
+    #Install Java from oracle website, make directory in correct place and unzip
+    - name: "install java - wget"
+      command: "wget --no-check-certificate --no-cookies --header \"Cookie: oraclelicense=accept-securebackup-cookie\" http://download.oracle.com/otn-pub/java/jdk/7u80-b15/jdk-7u80-linux-x64.tar.gz -O java-7-oracle.tar.gz"
+      when: p.stat.isdir is not defined or not p.stat.isdir
+
+    - name: "install java - make directories"
+      file: path=/usr/lib/jvm/ state=directory mode=0755
+      when: p.stat.isdir is not defined or not p.stat.isdir
+
+
+    # Unarchive a file that is already on the remote machine
+    - name: "install java - unpack directory"
+      unarchive: src=/home/ubuntu/java-7-oracle.tar.gz dest=/usr/lib/jvm/ copy=no
+      become: yes
+      when: p.stat.isdir is not defined or not p.stat.isdir
+
+    #move file contents and remove lower level folder
+    - name: "install java - clean up"
+      command: mv /usr/lib/jvm/jdk1.7.0_80 /usr/lib/jvm/java-7-oracle
+      become: yes
+      when: p.stat.isdir is not defined or not p.stat.isdir
+
+
+    #install maven & mercurial & lxde & vim
+    #lxde & vim for debugging purposes - remove this later??
+    - name: install maven and mercurial
+      apt: pkg={{ item }} state=installed
+      with_items:
+          - maven
+          - mercurial
+          - vim
+          - lxde
+      become: yes
+
+    #set environment variables - 4 files /.bashrc /.profile for ubuntu and root.
+    - name: "setting environment variables"
+      lineinfile: dest={{ item[0] }} line={{ item[1] }}
+      with_nested:
+        - ["~/.bashrc", "~/.profile", "/root/.bashrc", "/root/.profile"]
+        - ["export JAVA_HOME=/usr/lib/jvm/java-7-oracle",
+           "export JAVA_TOOL_OPTIONS=\"-Xmx4096m -XX:MaxPermSize=4096m\"",
+           "export PATH=$JAVA_HOME/bin:$PATH",
+           "export VIRGO_HOME=/mnt/genomespace/DEVDEPLOY/virgo"]
+      become: yes
+
+    # ensure new enviro variables are set
+    - name: "Setting environment variables"
+      command: "src ~/.bashrc"
+
+
+
+
+...
