@@ -26,5 +26,5 @@
     command: mv /mnt/genomespace-backup-madi-040216 /mnt/genomespace
     become: yes
     when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
-
+    
 ...

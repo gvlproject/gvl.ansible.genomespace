@@ -1,10 +1,28 @@
 ---
   #change all URLs based on var
+  #use find module to get list of files
+  - find: paths="/mnt/genomespace/SRC/combined/" recurse=yes contains=".*gs-test3\.ddns\.net.*" pattern=".*\.(?!class)" use_regex=True
+    register: gsfiles
+
+  #replace all instances of string
+  - replace: dest={{ item.path }} regexp="gs-test3\.ddns\.net" replace="madigs-ansible\.ddns\.net"
+    with_items: "{{ gsfiles.files }}"
+    become: yes
 
   #configure SSL certificate
+  - copy: src=files/tomcat.cer dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu mode=0600
+    become: yes
+
+  - name: "Import cert into keystore"
+    command: keytool -import -alias tomcat -file /mnt/genomespace/DEVDEPLOY/virgo/config/tomcat.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts -noprompt
+    become: yes
+
+  #copy tomcat server config
+  - copy: src=files/tomcat-server.xml dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu
+    become: yes
 
   #set AWS Credentials
-
+  
   #set dropbox Credentials
 
   #set swift Credentials
