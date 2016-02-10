@@ -57,10 +57,7 @@
            "export PATH=$JAVA_HOME/bin:$PATH",
            "export VIRGO_HOME=/mnt/genomespace/DEVDEPLOY/virgo"]
 
-    # # ensure new enviro variables are set
-    # - name: "Setting environment variables"
-    #   shell: source /home/ubuntu/.bashrc
-
+    # source bashrc to set env variables
     - name: source bashrc
       shell: source /home/ubuntu/.bashrc
       args:

@@ -1,6 +1,5 @@
 ---
   # copy genome space code & unzip from backup
-  # TODO: check what files need to go in ~/genomespace
 
   #check if GenomeSpace already installed
   - stat: path=/mnt/genomespace/SRC
@@ -19,12 +18,20 @@
     unarchive: src=/mnt/genomespace-backup-madi-040216.tar.gz dest=/mnt/ copy=no
     become: yes
     when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
-    become: yes
 
   #move file contents and remove lower level folder
   - name: "Clean up"
     command: mv /mnt/genomespace-backup-madi-040216 /mnt/genomespace
     become: yes
     when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
-    
+
+  #create genomespace home directory
+  - name: "Create genomespace home directory"
+    file: path=~/genomespace/gensecretkey state=directory mode=0755
+
+  #copy gensecretkey files
+  - copy: src=files/gengssecretkey.sh dest=/home/ubuntu/genomespace/gensecretkey/ mode=0755
+
+  - copy: src=files/secretkeygenerator-0.0.1-SNAPSHOT.jar dest=~/genomespace/gensecretkey/ owner=ubuntu
+
 ...

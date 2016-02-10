@@ -3,6 +3,7 @@
   remote_user: ubuntu
   tasks:
     - include_vars: defaults/main.yml
+    - include_vars: vars/test_vars.yml
     - include: tasks/main.yml
 
 ...

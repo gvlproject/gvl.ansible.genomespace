@@ -5,27 +5,52 @@
     register: gsfiles
 
   #replace all instances of string
-  - replace: dest={{ item.path }} regexp="gs-test3\.ddns\.net" replace="madigs-ansible\.ddns\.net"
+  - replace: dest={{ item.path }} regexp="gs-test3\.ddns\.net" replace="{{ gs_url }}"
     with_items: "{{ gsfiles.files }}"
     become: yes
 
   #configure SSL certificate
-  - copy: src=files/tomcat.cer dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu mode=0600
+  - copy: src="files/{{ ssl_cert_filename }}" dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu mode=0600
     become: yes
 
+  #TODO: SHOULD THIS BE REMOVED LATER??
+  #Delete existing cert in keystore
+  - command: keytool -delete -alias tomcat -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit
+    become: yes
+    environment: "{{ gs_env }}"
+    ignore_errors: yes
+
+  #Import SSL certificate into Java keystore
   - name: "Import cert into keystore"
     command: keytool -import -alias tomcat -file /mnt/genomespace/DEVDEPLOY/virgo/config/tomcat.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts -noprompt
     become: yes
+    environment: "{{ gs_env }}"
+
+  #generate genomespace secret key
+  - name: "Generate GenomeSpace secret key file and move to correct place"
+    shell: /home/ubuntu/genomespace/gensecretkey/gengssecretkey.sh
+    args:
+      creates: genomespace-secret.key
+    environment: "{{ gs_env }}"
+
+  - command: mv /home/ubuntu/genomespace-secret.key ~/genomespace/
 
   #copy tomcat server config
   - copy: src=files/tomcat-server.xml dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu
     become: yes
 
   #set AWS Credentials
-  
+  - name: Copy the AWS credentials file to home directory
+    template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
+
+  #check AWS credentials are correct in server.properties files
+
+
   #set dropbox Credentials
+aws.userid
 
   #set swift Credentials
+
 
 
 ...
