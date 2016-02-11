@@ -1,26 +1,34 @@
 ---
-  #Build GenomeSpace code
+  #Ansible script to build GenomeSpace and start Virgo server
+  #NOTE: THIS IS BROKEN! :(
+  #
+  # Author: Madison Flannery
+
+  #Build GenomeSpace code using mvn command
+  #Change directory to /src/combined first
+  #Store the stdout for debugging purposes
   - name: "Building GenomeSpace"
     command: mvn clean install -PdeployLocal -Dmaven.test.skip=true -DskipTests
     args:
       chdir: /mnt/genomespace/SRC/combined/
     environment: "{{ gs_env }}"
     register: out
+    become: yes
 
+  #TODO: REMOVE THIS
   - debug: var=out.stdout
 
-  # #Start virgo server
+  #Start Virgo server
   # - name: "Starting Virgo Server"
   #   shell: startup.sh
   #   args:
   #     chdir: /mnt/genomespace/DEVDEPLOY/virgo/bin/
 
-    #Hot deploy config.war and root-webapp.war
-    #Copy war files into directory to auto deploy?
-  #   #TODO: you need to remove splash before you can deploy root-webapp
-      #How to do this?????
-  #   prompt$ cd /home/applications
-  # prompt$ cp helloWorld.war $SERVER_HOME/pickup
+  #Hot deploy config.war and root-webapp.war
+  #Copy war files into directory to auto deploy?
+  #TODO: you need to remove splash before you can deploy root-webapp - How to do this?????
+  #https://www.eclipse.org/virgo/documentation/virgo-documentation-3.5.0.RELEASE/docs/virgo-user-guide/htmlsingle/virgo-user-guide.html#deployment-deploying
+  # docs say - cp helloWorld.war $SERVER_HOME/pickup 
 
 
 ...

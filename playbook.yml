@@ -1,9 +1,15 @@
 ---
-- hosts: nectar
-  remote_user: ubuntu
-  tasks:
-    - include_vars: defaults/main.yml
-    - include_vars: vars/test_vars.yml
-    - include: tasks/main.yml
+  #Ansible script to deploy the GVL version of GenomeSpace
+  #Requires the variables in defaults/main.yml to be set
+  #
+  # Author: Madison Flannery
+
+  #TODO: Change "nectar"
+  - hosts: nectar
+    remote_user: ubuntu
+    tasks:
+      - include_vars: defaults/main.yml
+      - include_vars: vars/test_vars.yml #This is for testing purposes so acct ID's arent pushed to git
+      - include: tasks/main.yml
 
 ...

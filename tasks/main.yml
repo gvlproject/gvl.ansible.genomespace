@@ -1,3 +1,12 @@
-# - include: install_dependencies.yml
-#- include: install_genomespace.yml
-- include: configure_genomespace.yml
+---
+  #Ansible script to run all tasks to deploy the GVL version of GenomeSpace
+  #Requires the variables in defaults/main.yml to be set
+  #
+  # Author: Madison Flannery
+
+  # - include: install_dependencies.yml
+  # - include: install_genomespace.yml
+  - include: configure_genomespace.yml
+  - include: build_and_run.yml
+
+...

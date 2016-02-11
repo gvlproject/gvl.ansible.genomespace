@@ -1,43 +1,55 @@
 ---
-    #Tasks to install genomespace dependencies
+    #Ansible script contaning tasks for installing GenomeSpace dependencies
+    #
+    # Author: Madison Flannery
 
-    #apt-get update before any packages are installed
-    # - name: "apt-get update"
-    #   apt: update_cache=yes
-    #   become: yes
+    #Sudo apt-get update before any packages are installed
+    - name: "sudo apt-get update"
+      apt: update_cache=yes
+      become: yes
 
-    #check if java already installed
-    - stat: path=/usr/lib/jvm/java-7-oracle
-      register: p
+    #Check if Java is already installed
+    - name: "Check if Java is insalled"
+      stat: path=/usr/lib/jvm/java-7-oracle
+      register: java_dir
+
+    #If Java not installed, print debug message
+    #TODO: REMOVE THIS?
     - debug: msg="Java has not been installed"
-      when: p.stat.isdir is not defined or not p.stat.isdir
+      when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
     #Install Java from oracle website, make directory in correct place and unzip
-    - name: "install java - wget"
+    #Extra options in wget to avoid failure due to license agreement
+    #Only complete if Java has not been previously installed
+    - name: "Download Java"
       command: "wget --no-check-certificate --no-cookies --header \"Cookie: oraclelicense=accept-securebackup-cookie\" http://download.oracle.com/otn-pub/java/jdk/7u80-b15/jdk-7u80-linux-x64.tar.gz -O java-7-oracle.tar.gz"
-      when: p.stat.isdir is not defined or not p.stat.isdir
+      when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
-    - name: "install java - make directories"
+    #Make directory for Java installation
+    #Only complete if Java has not been previously installed
+    - name: "Make Java directory"
       file: path=/usr/lib/jvm/ state=directory mode=0755
-      when: p.stat.isdir is not defined or not p.stat.isdir
+      when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
 
-    # Unarchive a file that is already on the remote machine
-    - name: "install java - unpack directory"
+    #Unarchive the Java .tar.gz downloaded file
+    #Only complete if Java has not been previously installed
+    - name: "Unpack downloaded Java file"
       unarchive: src=/home/ubuntu/java-7-oracle.tar.gz dest=/usr/lib/jvm/ copy=no
       become: yes
-      when: p.stat.isdir is not defined or not p.stat.isdir
+      when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
-    #move file contents and remove lower level folder
-    - name: "install java - clean up"
+    #Move unarchived Java contents and remove lower level folder
+    #Only complete if Java has not been previously installed
+    - name: "Clean up Java directory structure"
       command: mv /usr/lib/jvm/jdk1.7.0_80 /usr/lib/jvm/java-7-oracle
       become: yes
-      when: p.stat.isdir is not defined or not p.stat.isdir
+      when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
 
-    #install maven & mercurial & lxde & vim
-    #lxde & vim for debugging purposes - remove this later??
-    - name: install maven and mercurial
+    #Install maven & mercurial (& lxde & vim)
+    #TODO: lxde & vim for debugging purposes - remove this later??
+    - name: "Install Maven and Mercurial"
       apt: pkg={{ item }} state=installed
       with_items:
           - maven
@@ -46,7 +58,9 @@
           - lxde
       become: yes
 
-    #set environment variables - 4 files /.bashrc /.profile for ubuntu and root.
+    #Set environment variables - 4 files /.bashrc /.profile for ubuntu and root.
+    #NOTE: This only exists for debugging purposes - ansible env used everywhere else
+    #TODO: Remove this?
     - name: "Setting environment variables"
       become: yes
       lineinfile: dest={{ item[0] }} line={{ item[1] }} state=present
@@ -57,13 +71,11 @@
            "export PATH=$JAVA_HOME/bin:$PATH",
            "export VIRGO_HOME=/mnt/genomespace/DEVDEPLOY/virgo"]
 
-    # source bashrc to set env variables
-    - name: source bashrc
+    #Set environment variables - source bashrc
+    - name: "Source ~/.bashrc"
       shell: source /home/ubuntu/.bashrc
       args:
         executable: /bin/bash
-
-
 
 
 ...

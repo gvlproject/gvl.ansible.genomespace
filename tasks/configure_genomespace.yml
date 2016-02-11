@@ -1,55 +1,77 @@
 ---
-  #change all URLs based on var
-  #use find module to get list of files
-  - find: paths="/mnt/genomespace/SRC/combined/" recurse=yes contains=".*gs-test3\.ddns\.net.*" pattern=".*\.(?!class)" use_regex=True
+  #Ansible script to configure GenomeSpace
+  #Assumes GenomeSpace code is copied & unzipped, ~/genomespace/gensecret key files exist
+  #
+  # Author: Madison Flannery
+
+
+  #Change all URLs in the GenomeSpace code & associated files
+  #Get the list of files to change, exclude any .class files
+  - name: "Get list of files which require URL to be changed"
+    find: paths="/mnt/genomespace/SRC/combined/" recurse=yes contains=".*put-url-here.*" pattern=".*\.(?!class)" use_regex=True
     register: gsfiles
 
-  #replace all instances of string
-  - replace: dest={{ item.path }} regexp="put-url-here" replace="{{ gs_url }}"
-    with_items: "{{ gsfiles.files }}"
+  #Insert correct URLs in placeholder spots
+  - name: "Replace placeholder with correct URLs"
+    replace: dest={{ item.path }} regexp="put-url-here" replace="{{ gs_url }}"
+    with_items: "{{ gsfiles.files }}" #files list
     become: yes
 
-  #configure SSL certificate
-  - copy: src="files/{{ ssl_cert_filename }}" dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu mode=0600
+  #Configure SSL certificate
+  #Copy SSL certificate across
+  - name: "Copy SSL certificate to remote machine"
+    copy: src="files/{{ ssl_cert_filename }}" dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu mode=0600
     become: yes
 
   #TODO: SHOULD THIS BE REMOVED LATER??
-  #Delete existing cert in keystore
-  - command: keytool -delete -alias tomcat -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit
+  #Delete existing cert in keystore - this ensures next step will not fail if script run multiple times
+  #ignore_errors is set as this will throw error if certificate doesn't exist in java keystore
+  - name: "Delete existing SSL certificate from Java keystore"
+    command: keytool -delete -alias tomcat -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit
     become: yes
     environment: "{{ gs_env }}"
     ignore_errors: yes
 
   #Import SSL certificate into Java keystore
-  - name: "Import cert into keystore"
+  - name: "Import SSL certificate into Java keystore"
     command: keytool -import -alias tomcat -file /mnt/genomespace/DEVDEPLOY/virgo/config/tomcat.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts -noprompt
     become: yes
     environment: "{{ gs_env }}"
 
-  #generate genomespace secret key
-  - name: "Generate GenomeSpace secret key file and move to correct place"
+  #Generate genomespace secret key
+  #Resulting file will be located in home directory
+  - name: "Generate GenomeSpace secret key file"
     shell: /home/ubuntu/genomespace/gensecretkey/gengssecretkey.sh
     args:
       creates: genomespace-secret.key
     environment: "{{ gs_env }}"
 
-  - command: mv /home/ubuntu/genomespace-secret.key ~/genomespace/
+  - name: "Move to GenomeSpace secret key file to correct place"
+    command: mv /home/ubuntu/genomespace-secret.key ~/genomespace/
 
-  #copy tomcat server config
+  #Copy tomcat-server.xml config file
+  #TODO: Check if this will need to be different for a non self-signed cert
+  - name: "Copy tomcat-server.xml file to remote machine"
   - copy: src=files/tomcat-server.xml dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu
     become: yes
 
-  #set AWS Credentials in genomespace-aws.properties file
-  - name: Copy the AWS credentials file to home directory
+  #Set AWS Credentials in genomespace-aws.properties file
+  - name: "Create and copy the AWS credentials file"
     template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
 
+  #Set AWS Credentials, Dropbox credentials in dm-webservice server.properties file
   - name: "Create and copy dm-webservice server.properties file"
     template: src=dmwebservice_server_properties.j2 dest="/mnt/genomespace/SRC/combined/dm-webservice-properties/src/main/resources/server.properties"
     become: yes
 
+  #Set AWS Credentials, Dropbox credentials in dm-jobs server.properties file
   - name: "Create and copy dm-jobs server.properties file"
     template: src=dmjobs_server_properties.j2 dest="/mnt/genomespace/SRC/combined/dm-jobs-properties/src/main/resources/server.properties"
     become: yes
 
+  #Copy completed ~/genomespace folder to /root/genomespace
+  - name: "Copy completed ~/genomespace folder"
+    command: cp -r /home/ubuntu/genomespace /root/
+    become: yes
 
 ...
