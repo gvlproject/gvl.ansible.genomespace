@@ -5,7 +5,7 @@
     register: gsfiles
 
   #replace all instances of string
-  - replace: dest={{ item.path }} regexp="gs-test3\.ddns\.net" replace="{{ gs_url }}"
+  - replace: dest={{ item.path }} regexp="put-url-here" replace="{{ gs_url }}"
     with_items: "{{ gsfiles.files }}"
     become: yes
 
@@ -39,18 +39,17 @@
   - copy: src=files/tomcat-server.xml dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu
     become: yes
 
-  #set AWS Credentials
+  #set AWS Credentials in genomespace-aws.properties file
   - name: Copy the AWS credentials file to home directory
     template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
 
-  #check AWS credentials are correct in server.properties files
+  - name: "Create and copy dm-webservice server.properties file"
+    template: src=dmwebservice_server_properties.j2 dest="/mnt/genomespace/SRC/combined/dm-webservice-properties/src/main/resources/server.properties"
+    become: yes
 
-
-  #set dropbox Credentials
-aws.userid
-
-  #set swift Credentials
-
+  - name: "Create and copy dm-jobs server.properties file"
+    template: src=dmjobs_server_properties.j2 dest="/mnt/genomespace/SRC/combined/dm-jobs-properties/src/main/resources/server.properties"
+    become: yes
 
 
 ...
