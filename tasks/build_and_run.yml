@@ -1,9 +1,26 @@
 ---
-  #build code
+  #Build GenomeSpace code
+  - name: "Building GenomeSpace"
+    command: mvn clean install -PdeployLocal -Dmaven.test.skip=true -DskipTests
+    args:
+      chdir: /mnt/genomespace/SRC/combined/
+    environment: "{{ gs_env }}"
+    register: out
 
-  #copy war files into directory to auto deploy?
-  #NOTE: you need to remove splash!
+  - debug: var=out.stdout
 
-  #run server
+  # #Start virgo server
+  # - name: "Starting Virgo Server"
+  #   shell: startup.sh
+  #   args:
+  #     chdir: /mnt/genomespace/DEVDEPLOY/virgo/bin/
+
+    #Hot deploy config.war and root-webapp.war
+    #Copy war files into directory to auto deploy?
+  #   #TODO: you need to remove splash before you can deploy root-webapp
+      #How to do this?????
+  #   prompt$ cd /home/applications
+  # prompt$ cp helloWorld.war $SERVER_HOME/pickup
+
 
 ...
