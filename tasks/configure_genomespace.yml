@@ -57,7 +57,7 @@
 
   #Copy this random file because Virgo had a whinge it was missing it
   #TODO: Just add this into the GenomeSpace server folder in object store
-  - name: "Copy tomcat-server.xml file to remote machine"
+  - name: "Copy random Virgo config file to remote machine"
     copy: src=files/org.eclipse.virgo.kernel.jmxremote.access.properties dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu
     become: yes
 
