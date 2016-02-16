@@ -18,6 +18,11 @@
     become: yes
 
   #Configure SSL certificate
+  #Copy keystore across
+  - name: "Copy SSL certificate to remote machine"
+    copy: src="files/{{ ssl_keystore_name }}" dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu mode=0600
+    become: yes
+
   #Copy SSL certificate across
   - name: "Copy SSL certificate to remote machine"
     copy: src="files/{{ ssl_cert_filename }}" dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu mode=0600

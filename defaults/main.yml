@@ -9,6 +9,19 @@
 
   #Filename of SSL certificate
   ssl_cert_filename: "tomcat.cer"
+  ssl_keystore_name: "keystore"
+
+  #Username and password of test account (this needs to be created)
+  #NOTE: THESE ARE IN TEST_VARS.YML
+  admin_username: ""
+  admin_password: ""
+
+  #Email credentials
+  #NOTE: THESE ARE IN TEST_VARS.YML
+  gs_email: ""
+  gs_email_smtp: ""
+  gs_email_port: ""
+  gs_email_password: ""
 
   #Amazon Credentials
   #NOTE: THESE ARE IN TEST_VARS.YML
@@ -26,4 +39,16 @@
   gs_env:
     { JAVA_HOME: "/usr/lib/jvm/java-7-oracle",
     VIRGO_HOME: "/mnt/genomespace/DEVDEPLOY/virgo" }
+
+  #Set this to true if you want to add ANDS functionality
+  add_ands: false
+
+  #Swift Credentials for ANDS functionality
+  #NOTE: ANDS functionality is optional
+  #NOTE: THESE ARE IN TEST_VARS.YML
+  swift_username: ""
+  swift_password: ""
+  swift_tenancy: ""
+  swift_endpoint: ""
+  swift_container: ""
 ...

@@ -4,9 +4,9 @@
   #
   # Author: Madison Flannery
 
-  # - include: install_dependencies.yml
-  # - include: install_genomespace.yml
+  - include: install_dependencies.yml
+  - include: install_genomespace.yml
   - include: configure_genomespace.yml
-  # - include: build_and_run.yml
+  - include: build_and_run.yml
 
 ...

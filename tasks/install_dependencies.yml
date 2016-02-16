@@ -46,7 +46,6 @@
       become: yes
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
-
     #Install maven & mercurial (& lxde & vim)
     #TODO: lxde & vim for debugging purposes - remove this later??
     - name: "Install Maven and Mercurial"
