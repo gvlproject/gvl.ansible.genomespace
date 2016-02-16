@@ -19,7 +19,7 @@
 
   #Configure SSL certificate
   #Copy keystore across
-  - name: "Copy SSL certificate to remote machine"
+  - name: "Copy SSL keystore to remote machine"
     copy: src="files/{{ ssl_keystore_name }}" dest=/mnt/genomespace/DEVDEPLOY/virgo/config/ owner=ubuntu mode=0600
     become: yes
 
@@ -79,6 +79,18 @@
   - name: "Create and copy dm-jobs server.properties file"
     template: src=dmjobs_server_properties.j2 dest="/mnt/genomespace/SRC/combined/dm-jobs-properties/src/main/resources/server.properties"
     become: yes
+
+  #Set email account credentials in identityServer server.properties file
+  - name: "Create and copy identityServer server.properties file"
+    template: src=identityserver_server_properties.j2 dest="/mnt/genomespace/SRC/combined/identityServer-properties/src/main/resources/server.propertie"
+    become: yes
+
+  #Set ANDS in dm-webservice server.properties file
+  #TODO: Remove credentials from source code
+  - name: "Create and copy ANDS java class file"
+    template: src=ANDSpublisher.java.j2 dest="/mnt/genomespace/SRC/combined/dm-core/src/main/java/org/genomespace/datamanager/doi/ANDSPublisher.java"
+    become: yes
+    when: add_ands
 
   #Copy completed ~/genomespace folder to /root/genomespace
   - name: "Copy completed ~/genomespace folder"

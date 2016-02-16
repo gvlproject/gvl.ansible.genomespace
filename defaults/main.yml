@@ -38,7 +38,8 @@
   #TODO: ADD EXTRA ENV VARS
   gs_env:
     { JAVA_HOME: "/usr/lib/jvm/java-7-oracle",
-    VIRGO_HOME: "/mnt/genomespace/DEVDEPLOY/virgo" }
+    VIRGO_HOME: "/mnt/genomespace/DEVDEPLOY/virgo",
+    JAVA_TOOL_OPTIONS: "-Xmx4096m -XX:MaxPermSize=4096m" }
 
   #Set this to true if you want to add ANDS functionality
   add_ands: false
