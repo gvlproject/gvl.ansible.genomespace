@@ -6,6 +6,9 @@
 
   #URL to access GenomeSpace instance
   gs_url: "madigs-ansible.ddns.net"
+  gs_directory: "/mnt/genomespace"
+  gs_virgo_directory: "{{ gs_directory }}/DEVDEPLOY/virgo"
+  gs_src_directory: "{{ gs_directory }}/SRC/combined"
 
   #Filename of SSL certificate
   ssl_cert_filename: "tomcat.cer"

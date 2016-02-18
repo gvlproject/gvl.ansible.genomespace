@@ -6,7 +6,7 @@
 
   #Check if GenomeSpace already installed by checking if dir exists
   - name: "Check if GenomeSpace is already installed"
-  - stat: path=/mnt/genomespace/SRC
+  - stat: path="{{ gs_directory }}/SRC"
     register: genomespace_src_dir
 
   #Print message if GenomeSpace dir doesn't exist yet
@@ -30,7 +30,7 @@
   #Move file contents and remove lower level folder
   #Only complete if GenomeSpace not previously installed
   - name: "Clean up GenomeSpace directory structure"
-    command: mv /mnt/genomespace-backup-madi-040216 /mnt/genomespace
+    command: "mv /mnt/genomespace-backup-madi-040216 {{ gs_directory }}"
     become: yes
     when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
