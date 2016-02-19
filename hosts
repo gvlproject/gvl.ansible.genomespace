@@ -4,3 +4,10 @@
 [nectar:vars]
 ansible_user=ubuntu
 ansible_ssh_private_key_file=~/Documents/nectar/madi_nectar_keypair2.pem
+
+[newgs]
+115.146.88.223
+
+[newgs:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/Documents/nectar/madi_nectar_keypair2.pem

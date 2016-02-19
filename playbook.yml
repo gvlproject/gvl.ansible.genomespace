@@ -5,7 +5,7 @@
   # Author: Madison Flannery
 
   #TODO: Change "nectar"
-  - hosts: nectar
+  - hosts: newgs
     remote_user: ubuntu
     tasks:
       - include_vars: defaults/main.yml

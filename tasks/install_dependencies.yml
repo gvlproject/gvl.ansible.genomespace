@@ -4,13 +4,13 @@
     # Author: Madison Flannery
 
     #Sudo apt-get update before any packages are installed
-    - name: "sudo apt-get update"
-      apt: update_cache=yes
-      become: yes
+    # - name: "sudo apt-get update"
+    #   apt: update_cache=yes
+    #   become: yes
 
     #Check if Java is already installed
     - name: "Check if Java is insalled"
-      stat: path=/usr/lib/jvm/java-7-oracle
+      stat: path=/usr/lib/jvm/java-8-oracle
       register: java_dir
 
     #If Java not installed, print debug message
@@ -22,27 +22,29 @@
     #Extra options in wget to avoid failure due to license agreement
     #Only complete if Java has not been previously installed
     - name: "Download Java"
-      command: "wget --no-check-certificate --no-cookies --header \"Cookie: oraclelicense=accept-securebackup-cookie\" http://download.oracle.com/otn-pub/java/jdk/7u80-b15/jdk-7u80-linux-x64.tar.gz -O java-7-oracle.tar.gz"
+      command: "wget --no-check-certificate --no-cookies --header \"Cookie: oraclelicense=accept-securebackup-cookie\" http://download.oracle.com/otn-pub/java/jdk/8u74-b02/jdk-8u74-linux-x64.tar.gz -O java-8-oracle.tar.gz"
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
+      become: yes
 
     #Make directory for Java installation
     #Only complete if Java has not been previously installed
     - name: "Make Java directory"
       file: path=/usr/lib/jvm/ state=directory mode=0755
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
+      become: yes
 
 
     #Unarchive the Java .tar.gz downloaded file
     #Only complete if Java has not been previously installed
     - name: "Unpack downloaded Java file"
-      unarchive: src=/home/ubuntu/java-7-oracle.tar.gz dest=/usr/lib/jvm/ copy=no
+      unarchive: src=/home/ubuntu/java-8-oracle.tar.gz dest=/usr/lib/jvm/ copy=no
       become: yes
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
     #Move unarchived Java contents and remove lower level folder
     #Only complete if Java has not been previously installed
     - name: "Clean up Java directory structure"
-      command: mv /usr/lib/jvm/jdk1.7.0_80 /usr/lib/jvm/java-7-oracle
+      command: mv /usr/lib/jvm/jdk1.8.0_74 /usr/lib/jvm/java-8-oracle
       become: yes
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
@@ -65,10 +67,13 @@
       lineinfile: dest={{ item[0] }} line={{ item[1] }} state=present
       with_nested:
         - ["/home/ubuntu/.bashrc", "/home/ubuntu/.profile", "/root/.bashrc", "/root/.profile"]
-        - ["export JAVA_HOME=/usr/lib/jvm/java-7-oracle",
-           "export JAVA_TOOL_OPTIONS=\"-Xmx4096m -XX:MaxPermSize=4096m\"",
-           "export PATH=$JAVA_HOME/bin:$PATH",
-           "export VIRGO_HOME=/mnt/genomespace/DEVDEPLOY/virgo"]
+        - ["export JAVA_HOME=/usr/lib/jvm/java-8-oracle",
+           "export TOMCAT_HOME=/var/lib/tomcat7/",
+           "export JAVA_OPTS=\"-Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses\"",
+           "export CATALINA_HOME=/usr/share/tomcat7",
+           "export CATALINA_BASE=/var/lib/tomcat7",
+           "export PATH=$JAVA_HOME/bin:$PATH"]
+           #"export VIRGO_HOME=/mnt/genomespace/DEVDEPLOY/virgo"]
 
     #Set environment variables - source bashrc
     - name: "Source ~/.bashrc"
