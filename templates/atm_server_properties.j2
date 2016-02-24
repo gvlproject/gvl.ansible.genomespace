@@ -1,0 +1,28 @@
+#properties to configure ehcache replication
+#This will be the topic name
+org.genomespace.atm.ehcache.jmsReplicationTopicBindingName=dev_ehcache_topic
+
+#The queue name
+org.genomespace.atm.ehcache.jmsQueueBindingName=dev_ehcache_queue
+
+#the connection factory name
+org.genomespace.atm.ehcache.jmsReplicationTopicConnectionFactoryBindingName=dev_ehcache_topicConnectionFactory
+
+#the server address
+org.genomespace.atm.ehcache.jmsProviderURL=tcp://1234.5678.910:61616
+
+#the queue connection factory name
+org.genomespace.atm.ehcache.jmsQueueConnectionFactoryBindingName=ddev_ehcache_queueConnectionFactory
+org.genomespace.atm.authenticationUrl=https://{{ gs_url }}/identityServer/basic
+org.genomespace.atm.groupManagementServer=https://{{ gs_url }}/identityServer/
+org.genomespace.atm.datamanagerUrl=https://{{ gs_url }}/datamanager
+org.genomespace.atm.domainPrefix=dev
+
+org.genomespace.atm.api.currentVersion=1.0
+org.genomespace.atm.api.supportedVersions=1.0
+
+org.genomespace.usageLogger.domainPrefix=dev
+org.genomespace.identityServer.domainPrefix=
+
+org.genomespace.atm.groupManagementServer.username={{ admin_username }}
+org.genomespace.atm.groupManagementServer.password={{ admin_password }}

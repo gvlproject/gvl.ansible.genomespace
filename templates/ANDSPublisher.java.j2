@@ -1,0 +1,52 @@
+package org.genomespace.datamanager.doi;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
+
+import org.codehaus.jettison.json.JSONObject;
+import org.genomespace.datamanager.exceptions.ServerErrorException;
+import org.genomespace.datamanager.model.FileObjectIdentifier;
+import org.genomespace.datamanager.storage.swift.SwiftFileSystemProvider;
+import org.genomespace.datamanager.storage.swift.SwiftStorageSpec;
+import org.genomespace.datamanager.util.ANDSPublishUtil;
+import org.genomespace.files.FilePath;
+
+public class ANDSPublisher implements IPublishPublicMetaData {
+
+	private String OS_username = {{ swift_username }};
+	private String OS_PASS = {{ swift_password }};
+	private String OS_Tenancy = {{ swift_tenancy }};
+	private String OS_ENDPOINT = {{ swift_endpoint }};
+	private String OS_Container = {{ swift_container }};
+
+	@Override
+	public ByteArrayOutputStream[] RegisteryInterchangeFormatCollection(
+			JSONObject pubResource, String publicURL) throws ServerErrorException{
+		try{
+			return ANDSPublishUtil.pulishResource(pubResource, publicURL);
+		}
+		catch(Exception e){
+			throw new ServerErrorException(e, "Error in publishing meta data."+e.getMessage());
+		}
+	}
+
+	@Override
+	public void PublishRIFCS(ByteArrayOutputStream RIFCFile) {
+		// TODO Auto-generated method stub
+
+		byte[] buffer = RIFCFile.toByteArray();
+
+		InputStream ins = new ByteArrayInputStream(buffer);
+		SwiftStorageSpec sw = new SwiftStorageSpec(OS_Container, OS_username, OS_Tenancy, OS_PASS, OS_ENDPOINT, null, OS_username);
+		FilePath fp = new FilePath("rifc"+UUID.randomUUID().toString()+".xml");
+
+		FileObjectIdentifier<SwiftStorageSpec> fileId  = new FileObjectIdentifier<SwiftStorageSpec>(sw, fp);
+		SwiftFileSystemProvider swfs = new SwiftFileSystemProvider();
+		swfs.writeFile(fileId, ins, buffer.length);
+
+	}
+
+}

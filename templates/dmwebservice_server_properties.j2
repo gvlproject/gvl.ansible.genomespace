@@ -1,0 +1,55 @@
+#properties to configure ehcache replication
+#This will be the topic name
+org.genomespace.datamanager.ehcache.jmsReplicationTopicBindingName=dev_ehcache_topic
+#The queue name
+org.genomespace.datamanager.ehcache.jmsQueueBindingName=dev_ehcache_queue
+#the connection factory name
+org.genomespace.datamanager.ehcache.jmsReplicationTopicConnectionFactoryBindingName=dev_ehcache_topicConnectionFactory
+#the server address
+org.genomespace.datamanager.ehcache.jmsProviderURL=tcp://1234.5678.910:61616
+#the queue connection factory name
+org.genomespace.datamanager.ehcache.jmsQueueConnectionFactoryBindingName=ddev_ehcache_queueConnectionFactory
+
+org.genomespace.datamanager.s3signedurlexpirationtime=3000
+#the default bucket name where the genomespace data will be stored
+org.genomespace.datamanager.s3defaultbucket=vlsci-gs
+#org.genomespace.datamanager.s3defaultbucket=genomespace
+
+#default authentication url
+org.genomespace.datamanager.groupManagementServer.username={{ admin_username }}
+org.genomespace.datamanager.groupManagementServer.password={{ admin_password }}
+
+org.genomespace.datamanager.groupManagementServer=https://{{ gs_url }}/identityServer/
+org.genomespace.datamanager.authenticationUrl=https://{{ gs_url }}/identityServer/basic
+org.genomespace.datamanager.authenticationUrl=https://{{ gs_url }}/identityServer/basic
+org.genomespace.datamanager.authenticationUrl=https://{{ gs_url }}/identityServer/basic
+org.genomespace.datamanager.resource.awsPropertiesFile=genomespace-aws.properties
+org.genomespace.datamanager.logoutUrl=https://{{ gs_url }}/identityServer/openIdProvider?_action=logout&logout_return=https://{{ gs_url }}/datamanager/defaultdirectory
+
+#path to the file that contains the DataFormats
+#Root path used to generate DataManager related urls
+org.genomespace.datamanager.baseUrl=https://{{ gs_url }}/datamanager
+
+org.genomespace.datamanager.simpledb.domainNamespace=dev
+org.genomespace.datamanager.dataformat.simpledb.domainNamespace=dev
+
+org.genomespace.datamanager.openIdProviderUrl=https://{{ gs_url }}/identityServer/xrd.jsp
+
+org.genomespace.datamanager.api.currentVersion=1.0
+org.genomespace.datamanager.api.supportedVersions=1.0
+org.genomespace.datamanager.urlTopLevelPathsToRewriteWithApiVersion=file,defaultdirectory
+
+org.genomespace.datamanager.conversionscripts.dir.perl=/mnt/genomespace/SRC/combine/converter-gmt2genomicatab/converters
+
+org.genomespace.usageLogger.domainPrefix=dev
+
+org.genomespace.identityServer.domainPrefix=
+
+org.genomespace.datamanager.aws.username={{ aws_username }}
+org.genomespace.datamanager.aws.userid={{ aws_access_id }}
+
+org.genomespace.datamanager.dropbox.appId={{ dropbox_access_id }}
+org.genomespace.datamanager.dropbox.appSecretKey={{ dropbox_secret_key }}
+org.genomespace.datamanager.dropbox.appEncodedKey={{ dropbox_encoded_key }}
+
+org.genomespace.datamanager.job.indexing.s3.cron=0 0 1 * * *

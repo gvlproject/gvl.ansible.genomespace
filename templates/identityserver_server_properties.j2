@@ -1,0 +1,11 @@
+org.genomespace.identityServer.baseUrl=https://{{ gs_url }}/identityServer
+org.genomespace.identityServer.authenticationUrl=https://{{ gs_url }}/identityServer/basic
+org.genomespace.identityServer.resource.awsPropertiesFile=gsdev-aws.properties
+#User email account to be used by registration emailer
+org.genomespace.identity.emailer.user={{ gs_email }}
+#Emailer smtp host
+org.genomespace.identity.emailer.host={{ gs_email_smtp }}
+#Emailer smtp host port
+org.genomespace.identity.emailer.port={{ gs_email_port }}
+#Usage logger domain prefix
+org.genomespace.usageLogger.domainPrefix=dev
