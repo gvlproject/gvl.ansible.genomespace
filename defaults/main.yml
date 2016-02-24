@@ -5,9 +5,8 @@
   # Author: Madison Flannery
 
   #URL to access GenomeSpace instance
-  gs_url: "madigs-ansible.ddns.net"
-  gs_directory: "/mnt/genomespace"
-  gs_virgo_directory: "{{ gs_directory }}/DEVDEPLOY/virgo"
+  gs_url: "madinewgs-ansible.ddns.net"
+  gs_directory: "/home/ubuntu/genomespace"
   gs_src_directory: "{{ gs_directory }}/SRC/combined"
 
   #Filename of SSL certificate
@@ -40,9 +39,12 @@
 
   #TODO: ADD EXTRA ENV VARS
   gs_env:
-    { JAVA_HOME: "/usr/lib/jvm/java-7-oracle",
-    VIRGO_HOME: "/mnt/genomespace/DEVDEPLOY/virgo",
-    JAVA_TOOL_OPTIONS: "-Xmx4096m -XX:MaxPermSize=4096m" }
+    { JAVA_HOME: "/usr/lib/jvm/java-8-oracle",
+    TOMCAT_HOME: "/var/lib/tomcat7/",
+    JAVA_OPTS: "-Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses",
+    CATALINA_HOME: "/usr/share/tomcat7",
+    CATALINA_BASE: "/var/lib/tomcat7" }
+
 
   #Set this to true if you want to add ANDS functionality
   add_ands: false
