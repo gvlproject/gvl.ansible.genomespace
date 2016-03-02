@@ -1,5 +1,5 @@
 [nectar]
-115.146.86.170
+115.146.94.35
 
 [nectar:vars]
 ansible_user=ubuntu

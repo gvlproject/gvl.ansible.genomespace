@@ -24,16 +24,16 @@
 	<Listener className="org.eclipse.virgo.web.tomcat.support.ServerLifecycleLoggingListener"/>
 
 	<Service name="Catalina">
-		<Connector port="8081" protocol="HTTP/1.1"
+		<Connector port="80" protocol="HTTP/1.1"
 			connectionTimeout="20000"
-			redirectPort="8444" />
+			redirectPort="443" />
 
 		<Connector port="443" protocol="HTTP/1.1" SSLEnabled="true"
 			maxThreads="150" scheme="https" secure="true"
 			clientAuth="false"  sslProtocol="TLS"
 			keystoreFile="config/keystore"
-			keystorePass="changeit"	 
-		/>		
+			keystorePass="{{ ssl_pass }}"
+		/>
 		<Connector port="8010" protocol="AJP/1.3" redirectPort="443" />
 
 		<Engine name="Catalina" defaultHost="localhost">
@@ -47,7 +47,7 @@
 
 				<Valve className="org.apache.catalina.valves.AccessLogValve" directory="serviceability/logs/access"
 					prefix="localhost_access_log." suffix=".txt" pattern="common" resolveHosts="false"/>
-					
+
 				<Valve className="org.eclipse.virgo.web.tomcat.support.ApplicationNameTrackingValve"/>
 			</Host>
 		</Engine>

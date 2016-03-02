@@ -20,26 +20,25 @@
   #Configure SSL certificate
   #Copy keystore across
   - name: "Copy SSL keystore to remote machine"
-    copy: src="files/{{ ssl_keystore_name }}" dest="{{ gs_virgo_directory }}/config/" owner=ubuntu mode=0600
+    copy: src="files/{{ ssl_keystore_name }}" dest="{{ gs_virgo_directory }}/config/keystore" owner=ubuntu mode=0600
     become: yes
 
   #Copy SSL certificate across
   - name: "Copy SSL certificate to remote machine"
-    copy: src="files/{{ ssl_cert_filename }}" dest="{{ gs_virgo_directory }}/config/" owner=ubuntu mode=0600
+    copy: src="files/{{ ssl_cert_filename }}" dest="{{ gs_virgo_directory }}/config/tomcat.cer" owner=ubuntu mode=0600
     become: yes
 
-  #TODO: SHOULD THIS BE REMOVED LATER??
   #Delete existing cert in keystore - this ensures next step will not fail if script run multiple times
   #ignore_errors is set as this will throw error if certificate doesn't exist in java keystore
   - name: "Delete existing SSL certificate from Java keystore"
-    command: keytool -delete -alias tomcat -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit
+    command: "keytool -delete -alias tomcat -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass {{ ssl_pass }}"
     become: yes
     environment: "{{ gs_env }}"
     ignore_errors: yes
 
   #Import SSL certificate into Java keystore
   - name: "Import SSL certificate into Java keystore"
-    command: keytool -import -alias tomcat -file {{ gs_virgo_directory }}/config/tomcat.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts -noprompt
+    command: "keytool -import -alias tomcat -file {{ gs_virgo_directory }}/config/tomcat.cer -storepass {{ ssl_pass }} -keystore $JAVA_HOME/jre/lib/security/cacerts -noprompt"
     become: yes
     environment: "{{ gs_env }}"
 
@@ -55,15 +54,8 @@
     command: mv /home/ubuntu/genomespace-secret.key /home/ubuntu/genomespace/
 
   #Copy tomcat-server.xml config file
-  #TODO: Check if this will need to be different for a non self-signed cert
   - name: "Copy tomcat-server.xml file to remote machine"
-    copy: src=files/tomcat-server.xml dest="{{ gs_virgo_directory }}/config/" owner=ubuntu
-    become: yes
-
-  #Copy this random file because Virgo had a whinge it was missing it
-  #TODO: Just add this into the GenomeSpace server folder in object store
-  - name: "Copy random Virgo config file to remote machine"
-    copy: src=files/org.eclipse.virgo.kernel.jmxremote.access.properties dest="{{ gs_virgo_directory }}/config/" owner=ubuntu
+    template: src=templates/tomcat-server.xml.j2 dest="{{ gs_virgo_directory }}/config/tomcat-server.xml" owner=ubuntu
     become: yes
 
   #Set AWS Credentials in genomespace-aws.properties file
@@ -91,7 +83,6 @@
     become: yes
 
   #Set ANDS in dm-webservice server.properties file
-  #TODO: Remove credentials from source code
   - name: "Create and copy ANDS java class file"
     template: src=ANDSpublisher.java.j2 dest="{{ gs_src_directory }}/dm-core/src/main/java/org/genomespace/datamanager/doi/ANDSPublisher.java"
     become: yes
@@ -100,6 +91,11 @@
   #Copy completed ~/genomespace folder to /root/genomespace
   - name: "Copy completed ~/genomespace folder"
     command: cp -r /home/ubuntu/genomespace /root/
+    become: yes
+
+  #Set Virgo admin user
+  - name: "Create and copy Virgo admin user file"
+    template: src=virgo_config.j2 dest="{{ gs_virgo_directory }}/config/org.eclipse.virgo.kernel.users.properties"
     become: yes
 
 ...

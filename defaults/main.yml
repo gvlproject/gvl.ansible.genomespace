@@ -5,54 +5,60 @@
   # Author: Madison Flannery
 
   #URL to access GenomeSpace instance
-  gs_url: "madigs-ansible.ddns.net"
-  gs_directory: "/mnt/genomespace"
-  gs_virgo_directory: "{{ gs_directory }}/DEVDEPLOY/virgo"
-  gs_src_directory: "{{ gs_directory }}/SRC/combined"
+  gs_url: ""
 
   #Filename of SSL certificate
-  ssl_cert_filename: "tomcat.cer"
-  ssl_keystore_name: "keystore"
+  ssl_cert_filename: ""
+  ssl_keystore_name: ""
+
+  #SSL keystore password
+  ssl_pass: ""
 
   #Username and password of test account (this needs to be created)
-  #NOTE: THESE ARE IN TEST_VARS.YML
   admin_username: ""
   admin_password: ""
 
   #Email credentials
-  #NOTE: THESE ARE IN TEST_VARS.YML
   gs_email: ""
   gs_email_smtp: ""
   gs_email_port: ""
   gs_email_password: ""
 
   #Amazon Credentials
-  #NOTE: THESE ARE IN TEST_VARS.YML
+  aws_username: ""
   aws_access_id: ""
   aws_secret_key: ""
 
   #Dropbox Credentials
-  #NOTE: THESE ARE IN TEST_VARS.YML
   dropbox_access_id: ""
   dropbox_secret_key: ""
+  dropbox_encoded_key: ""
 
-  gs_download_link: "https://swift.rc.nectar.org.au:8888/v1/AUTH_eeafd30a213f4abaa6df7c0410b9111b/gs-backups/genomespace-backup-madi-040216.tar.gz?temp_url_sig=8ad7637a9114bbbcc738dd0d9c12f7b1f1b98159&temp_url_expires=1454994135"
-
-  #TODO: ADD EXTRA ENV VARS
-  gs_env:
-    { JAVA_HOME: "/usr/lib/jvm/java-7-oracle",
-    VIRGO_HOME: "/mnt/genomespace/DEVDEPLOY/virgo",
-    JAVA_TOOL_OPTIONS: "-Xmx4096m -XX:MaxPermSize=4096m" }
+  #Password for the Admin console
+  virgo_username: ""
+  virgo_password: ""
 
   #Set this to true if you want to add ANDS functionality
   add_ands: false
 
   #Swift Credentials for ANDS functionality
   #NOTE: ANDS functionality is optional
-  #NOTE: THESE ARE IN TEST_VARS.YML
   swift_username: ""
   swift_password: ""
   swift_tenancy: ""
   swift_endpoint: ""
   swift_container: ""
+
+  ######################################
+  #DO NOT CHANGE THE FOLLOWING VARIABLES
+  gs_directory: "/mnt/genomespace"
+  gs_virgo_directory: "{{ gs_directory }}/DEVDEPLOY/virgo"
+  gs_src_directory: "{{ gs_directory }}/SRC/combined"
+  gs_env:
+    { JAVA_HOME: "/usr/lib/jvm/java-7-oracle",
+    VIRGO_HOME: "/mnt/genomespace/DEVDEPLOY/virgo",
+    JAVA_TOOL_OPTIONS: "-Xmx4096m -XX:MaxPermSize=4096m" }
+
+  gs_download_link: "https://swift.rc.nectar.org.au:8888/v1/AUTH_eeafd30a213f4abaa6df7c0410b9111b/gs-backups/genomespace-backup-madi-040216.tar.gz?temp_url_sig=f10b77939aec3cf61592cc626720fb6ec6f0d4d4&temp_url_expires=1457247581"
+
 ...

@@ -14,7 +14,6 @@
       register: java_dir
 
     #If Java not installed, print debug message
-    #TODO: REMOVE THIS?
     - debug: msg="Java has not been installed"
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
@@ -30,7 +29,7 @@
     - name: "Make Java directory"
       file: path=/usr/lib/jvm/ state=directory mode=0755
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
-
+      become: yes
 
     #Unarchive the Java .tar.gz downloaded file
     #Only complete if Java has not been previously installed
@@ -47,7 +46,7 @@
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
     #Install maven & mercurial (& lxde & vim)
-    #TODO: lxde & vim for debugging purposes - remove this later??
+    #lxde & vim for debugging purposes
     - name: "Install Maven and Mercurial"
       apt: pkg={{ item }} state=installed
       with_items:
@@ -59,7 +58,6 @@
 
     #Set environment variables - 4 files /.bashrc /.profile for ubuntu and root.
     #NOTE: This only exists for debugging purposes - ansible env used everywhere else
-    #TODO: Remove this?
     - name: "Setting environment variables"
       become: yes
       lineinfile: dest={{ item[0] }} line={{ item[1] }} state=present

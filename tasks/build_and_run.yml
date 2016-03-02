@@ -1,6 +1,5 @@
 ---
   #Ansible script to build GenomeSpace and start Virgo server
-  #NOTE: THIS IS BROKEN! :(
   #
   # Author: Madison Flannery
 
@@ -15,20 +14,8 @@
     register: out
     become: yes
 
-  #TODO: REMOVE THIS
-  - debug: var=out.stdout
-
-  #Start Virgo server
-  # - name: "Starting Virgo Server"
-  #   shell: startup.sh
-  #   args:
-  #     chdir: /mnt/genomespace/DEVDEPLOY/virgo/bin/
-
-  #Hot deploy config.war and root-webapp.war
-  #Copy war files into directory to auto deploy?
-  #TODO: you need to remove splash before you can deploy root-webapp - How to do this?????
-  #https://www.eclipse.org/virgo/documentation/virgo-documentation-3.5.0.RELEASE/docs/virgo-user-guide/htmlsingle/virgo-user-guide.html#deployment-deploying
-  # docs say - cp helloWorld.war $SERVER_HOME/pickup 
+  #Manually need to start virgo server - cd /mnt/genomespace/DEVDEPLOY/virgo/bin && ./startup.sh
+  #Then you need to go to admin console 
 
 
 ...
