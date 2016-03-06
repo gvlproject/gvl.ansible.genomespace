@@ -30,7 +30,7 @@ To run the playbook:
     * `[gs_email]` and `[gs_email_password]` is the email address and corresponding password which will be used to register new users. `[gs_email_smtp]` and `[gs_email_port]` are for the corresponding SMTP server and port used to send mail.
     * `[aws_access_id]` and `[aws_secret_key]` are the access ID and secret key for the AWS account. Instructions for obtaining these can be found [here](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSGettingStartedGuide/AWSCredentials.html).
     * `[dropbox_access_id]` and `[dropbox_secret_key]` are the access ID and secret key for the Dropbox developer account. These can be obtained by creating a new 'app' under 'My apps' at [https://www.dropbox.com/developers](https://www.dropbox.com/developers)
-    * `[dropbox_encoded_key]` should be generated at BLAH using the `[dropbox_secret_key]`
+    * `[dropbox_encoded_key]` should be generated [here](https://dl.dropboxusercontent.com/spa/pjlfdak1tmznswp/api_keys.js/public/index.html) using the `[dropbox_secret_key]`
     * `[virgo_username]` and `[virgo_password]` are your chosen username and password for the Virgo Server Admin Console.
   5. From the gvl.ansible.genomespace directory, run the playbook
   ```
