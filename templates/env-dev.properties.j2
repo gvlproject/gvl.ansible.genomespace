@@ -1,0 +1,63 @@
+atm.baseUrl=https://{{ gs_url }}/atm
+dm-webservice.baseUrl=https://{{ gs_url }}/datamanager
+identityServer.baseUrl=https://{{ gs_url }}/identityServer
+jsui.baseUrl=https://{{ gs_url }}/jsui
+
+
+global.converterPerlScriptDir=/opt/apache-tomcat/gs-config/dm-converters/perl
+
+global.groupManagementServer.user={{ admin_username }}
+global.groupManagementServer.password={{ admin_password }}
+
+dm-jobs.indexing.s3.cron=0 0 3 * * *
+#dm-jobs.indexing.s3.cron=0 0 0/1 * * *
+
+
+identityServer.emailer.user={{ gs_email }}
+identityServer.emailer.host={{ gs_email_smtp }}
+identityServer.emailer.port={{ gs_email_port }}
+identityServer.enableCORSAccessHttpServletFilter=true
+
+jsui.smtp.host=email-smtp.us-east-1.amazonaws.com
+jsui.smtp.port=465
+jsui.smtp.from=dxxxx
+jsui.smtp.username=xxxxx
+jsui.smtp.password=xxxx
+jsui.fileParkingUsername=xxxx
+jsui.fileParkingPassword=xxxx
+
+
+#global.mongodb.host=gs-mongo-repl3-0.genomespace.7359.mongodbdns.com,gs-mongo-repl3-1.genomespace.7359.mongodbdns.com
+
+global.deploymentEnvironment=dev
+global.defaultBucketName=genomespace-dev
+global.cacheReplication.jmsProviderUrl=tcp://localhost:61616
+
+global.dropbox.secretKey=xxxxx
+global.dropbox.encodedKey=xxxx
+global.dropbox.appId=xxxxx
+
+global.googledrive.clientId=xxx
+global.googledrive.clientSecret=xxx
+global.googledrive.applicationName=xxx
+global.googledrive.callbackUri=https://{{ gs_url }}/datamanager/v1.0/externalaccount/@all/googledrive/verify
+
+
+#global.domainPrefix=prod
+#global.usageLogger.domainPrefix=prod
+identityServer.domainPrefix=
+#global.cacheReplication.prefix=dev
+global.defaultBucketName=genomespace-test-dev
+
+global.usageLogger.domainPrefix=
+
+global.domainPrefix=dev
+
+global.cacheReplication.prefix=dev
+
+
+global.mongodb.databaseName=gs-dev
+
+global.mongodb.host=115.146.86.104
+
+global.mongodb.port=27017

@@ -6,7 +6,7 @@
 
   #Check if GenomeSpace already installed by checking if dir exists
   - name: "Check if GenomeSpace is already installed"
-  - stat: path="{{ gs_directory }}/SRC"
+    stat: path="{{ gs_directory }}/SRC"
     register: genomespace_src_dir
 
   #Print message if GenomeSpace dir doesn't exist yet
@@ -16,33 +16,31 @@
   #Grab GenomeSpace code and server etc from object store
   #Only complete if GenomeSpace not previously installed
   - name: "Download GenomeSpace"
-    get_url: url={{ gs_download_link }} dest="/mnt/genomespace-backup-madi-040216.tar.gz"
+    get_url: url={{ gs_download_link }} dest="/home/ubuntu/genomespace-v2.0.tar.gz"
     when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
     become: yes
-
-  #Unpack the GenomeSpace archive
-  #Only complete if GenomeSpace not previously installed
-  - name: "Unarchive downloaded GenomeSpace files"
-    unarchive: src=/mnt/genomespace-backup-madi-040216.tar.gz dest=/mnt/ copy=no
-    become: yes
-    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
-
-  #Move file contents and remove lower level folder
-  #Only complete if GenomeSpace not previously installed
-  - name: "Clean up GenomeSpace directory structure"
-    command: "mv /mnt/genomespace-backup-madi-040216 {{ gs_directory }}"
-    become: yes
-    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
   #Create GenomeSpace directory in home folder
   #NOTE: The completed contents of this folder needs to be copied to /root/genomespace
   - name: "Create GenomeSpace home directory"
-    file: path=~/genomespace/gensecretkey state=directory mode=0755
+    file: path=~/genomespace state=directory mode=0755
 
-  #Copy gensecretkey files to ~/genomespace
-  - name: "Copy GenomeSpace secret key generator files"
-    copy: src=files/gengssecretkey.sh dest=/home/ubuntu/genomespace/gensecretkey/ mode=0755
+  #Unpack the GenomeSpace archive
+  #Only complete if GenomeSpace not previously installed
+  - name: "Unarchive downloaded GenomeSpace files"
+    unarchive: src=/home/ubuntu/genomespace-v2.0.tar.gz dest=/home/ubuntu/genomespace copy=no
+    become: yes
+    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
-  - copy: src=files/secretkeygenerator-0.0.1-SNAPSHOT.jar dest=~/genomespace/gensecretkey/ owner=ubuntu
+  # #Create GenomeSpace directory in home folder
+  # #NOTE: The completed contents of this folder needs to be copied to /root/genomespace
+  # - name: "Create GenomeSpace home directory"
+  #   file: path=~/genomespace/gensecretkey state=directory mode=0755
+  #
+  # #Copy gensecretkey files to ~/genomespace
+  # - name: "Copy GenomeSpace secret key generator files"
+  #   copy: src=files/gengssecretkey.sh dest=/home/ubuntu/genomespace/gensecretkey/ mode=0755
+  #
+  # - copy: src=files/secretkeygenerator-0.0.1-SNAPSHOT.jar dest=~/genomespace/gensecretkey/ owner=ubuntu
 
 ...

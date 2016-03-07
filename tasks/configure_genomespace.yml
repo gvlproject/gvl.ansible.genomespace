@@ -8,7 +8,7 @@
   #Change all URLs in the GenomeSpace code & associated files
   #Get the list of files to change, exclude any .class files
   - name: "Get list of files which require URL to be changed"
-    find: paths="{{ gs_directory }}/SRC/combined/" recurse=yes contains=".*put-url-here.*" pattern=".*\.(?!class)" use_regex=True
+    find: paths="{{ gs_directory }}/SRC/combined/" recurse=yes contains=".*genomespace-test.genome.edu.au.*" pattern=".*\.(?!class)" use_regex=True
     register: gsfiles
 
   #Insert correct URLs in placeholder spots
@@ -20,12 +20,12 @@
   #Configure SSL certificate
   #Copy keystore across
   - name: "Copy SSL keystore to remote machine"
-    copy: src="files/{{ ssl_keystore_name }}" dest="{{ gs_virgo_directory }}/config/" owner=ubuntu mode=0600
+    copy: src="files/{{ ssl_keystore_name }}" dest="{{ gs_directory }}" owner=ubuntu mode=0600
     become: yes
 
   #Copy SSL certificate across
   - name: "Copy SSL certificate to remote machine"
-    copy: src="files/{{ ssl_cert_filename }}" dest="{{ gs_virgo_directory }}/config/" owner=ubuntu mode=0600
+    copy: src="files/{{ ssl_cert_filename }}" dest="{{ gs_directory }}" owner=ubuntu mode=0600
     become: yes
 
   #TODO: SHOULD THIS BE REMOVED LATER??
@@ -39,7 +39,7 @@
 
   #Import SSL certificate into Java keystore
   - name: "Import SSL certificate into Java keystore"
-    command: keytool -import -alias tomcat -file {{ gs_virgo_directory }}/config/tomcat.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts -noprompt
+    command: keytool -import -alias tomcat -file {{ gs_directory }}/tomcat.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts -noprompt
     become: yes
     environment: "{{ gs_env }}"
 
@@ -54,52 +54,46 @@
   - name: "Move to GenomeSpace secret key file to correct place"
     command: mv /home/ubuntu/genomespace-secret.key /home/ubuntu/genomespace/
 
-  #Copy tomcat-server.xml config file
-  #TODO: Check if this will need to be different for a non self-signed cert
-  - name: "Copy tomcat-server.xml file to remote machine"
-    copy: src=files/tomcat-server.xml dest="{{ gs_virgo_directory }}/config/" owner=ubuntu
-    become: yes
-
-  #Copy this random file because Virgo had a whinge it was missing it
-  #TODO: Just add this into the GenomeSpace server folder in object store
-  - name: "Copy random Virgo config file to remote machine"
-    copy: src=files/org.eclipse.virgo.kernel.jmxremote.access.properties dest="{{ gs_virgo_directory }}/config/" owner=ubuntu
-    become: yes
-
-  #Set AWS Credentials in genomespace-aws.properties file
-  - name: "Create and copy the AWS credentials file"
-    template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
-
-  #Set AWS Credentials, Dropbox credentials in dm-webservice server.properties file
-  - name: "Create and copy dm-webservice server.properties file"
-    template: src=dmwebservice_server_properties.j2 dest="{{ gs_directory }}/SRC/combined/dm-webservice-properties/src/main/resources/server.properties"
-    become: yes
-
-  #Set AWS Credentials, Dropbox credentials in dm-jobs server.properties file
-  - name: "Create and copy dm-jobs server.properties file"
-    template: src=dmjobs_server_properties.j2 dest="{{ gs_src_directory }}/dm-jobs-properties/src/main/resources/server.properties"
-    become: yes
-
-  #Set email account credentials in identityServer server.properties file
-  - name: "Create and copy identityServer server.properties file"
-    template: src=identityserver_server_properties.j2 dest="{{ gs_src_directory }}/identityServer-properties/src/main/resources/server.properties"
-    become: yes
-
-  #Set email account credentials in identityServer server.properties file
-  - name: "Create and copy ATM server.properties file"
-    template: src=atm_server_properties.j2 dest="{{ gs_src_directory }}/atm-properties/src/main/resources/server.properties"
-    become: yes
-
-  #Set ANDS in dm-webservice server.properties file
-  #TODO: Remove credentials from source code
-  - name: "Create and copy ANDS java class file"
-    template: src=ANDSpublisher.java.j2 dest="{{ gs_src_directory }}/dm-core/src/main/java/org/genomespace/datamanager/doi/ANDSPublisher.java"
-    become: yes
-    when: add_ands
-
-  #Copy completed ~/genomespace folder to /root/genomespace
-  - name: "Copy completed ~/genomespace folder"
-    command: cp -r /home/ubuntu/genomespace /root/
-    become: yes
+  # #Copy tomcat-server.xml config file
+  # #TODO: Check if this will need to be different for a non self-signed cert
+  # - name: "Copy tomcat-server.xml file to remote machine"
+  #   copy: src=files/tomcat-server.xml dest="{{ gs_virgo_directory }}/config/" owner=ubuntu
+  #   become: yes
+  #
+  # #Set AWS Credentials in genomespace-aws.properties file
+  # - name: "Create and copy the AWS credentials file"
+  #   template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
+  #
+  # #Set AWS Credentials, Dropbox credentials in dm-webservice server.properties file
+  # - name: "Create and copy dm-webservice server.properties file"
+  #   template: src=dmwebservice_server_properties.j2 dest="{{ gs_directory }}/SRC/combined/dm-webservice-properties/src/main/resources/server.properties"
+  #   become: yes
+  #
+  # #Set AWS Credentials, Dropbox credentials in dm-jobs server.properties file
+  # - name: "Create and copy dm-jobs server.properties file"
+  #   template: src=dmjobs_server_properties.j2 dest="{{ gs_src_directory }}/dm-jobs-properties/src/main/resources/server.properties"
+  #   become: yes
+  #
+  # #Set email account credentials in identityServer server.properties file
+  # - name: "Create and copy identityServer server.properties file"
+  #   template: src=identityserver_server_properties.j2 dest="{{ gs_src_directory }}/identityServer-properties/src/main/resources/server.properties"
+  #   become: yes
+  #
+  # #Set email account credentials in identityServer server.properties file
+  # - name: "Create and copy ATM server.properties file"
+  #   template: src=atm_server_properties.j2 dest="{{ gs_src_directory }}/atm-properties/src/main/resources/server.properties"
+  #   become: yes
+  #
+  # #Set ANDS in dm-webservice server.properties file
+  # #TODO: Remove credentials from source code
+  # - name: "Create and copy ANDS java class file"
+  #   template: src=ANDSpublisher.java.j2 dest="{{ gs_src_directory }}/dm-core/src/main/java/org/genomespace/datamanager/doi/ANDSPublisher.java"
+  #   become: yes
+  #   when: add_ands
+  #
+  # #Copy completed ~/genomespace folder to /root/genomespace
+  # - name: "Copy completed ~/genomespace folder"
+  #   command: cp -r /home/ubuntu/genomespace /root/
+  #   become: yes
 
 ...

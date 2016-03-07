@@ -128,22 +128,22 @@
 
     #Start MongoDB service
     - name: "Start MongoDB service (mongod)"
-      service: name=httpd state=started
+      service: name=mongod state=started
 
-    #Install ActiveMQ (For ehcache)
-    - name: "Download ActiveMQ"
-      get_url: url="http://archive.apache.org/dist/activemq/apache-activemq/5.9.0/apache-activemq-5.9.0-bin.tar.gz"
-
-    #Make directory for ActiveMQ installation
-    #Only complete if Java has not been previously installed
-    - name: "Make ActiveMQ directory"
-      file: path="{{ gs_directory }}/activeMQ" state=directory mode=0755
-      become: yes
-
-    #Unpack ActiveMQ file
-    - name: "Unpack ActiveMQ tarball"
-      unarchive: src=apache-activemq-5.9.0-bin.tar.gz dest="{{ gs_directory }}"
-
-    - name: "Move ActiveMQ to the right place"
-      command: "mv apache-activemq-5.9.0 activeMQ/"
+    # #Install ActiveMQ (For ehcache)
+    # - name: "Download ActiveMQ"
+    #   get_url: url="http://archive.apache.org/dist/activemq/apache-activemq/5.9.0/apache-activemq-5.9.0-bin.tar.gz"
+    #
+    # #Make directory for ActiveMQ installation
+    # #Only complete if Java has not been previously installed
+    # - name: "Make ActiveMQ directory"
+    #   file: path="{{ gs_directory }}/activeMQ" state=directory mode=0755
+    #   become: yes
+    #
+    # #Unpack ActiveMQ file
+    # - name: "Unpack ActiveMQ tarball"
+    #   unarchive: src=apache-activemq-5.9.0-bin.tar.gz dest="{{ gs_directory }}"
+    #
+    # - name: "Move ActiveMQ to the right place"
+    #   command: "mv apache-activemq-5.9.0 activeMQ/"
 ...

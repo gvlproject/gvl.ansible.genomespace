@@ -1,0 +1,22 @@
+---
+  #Copy tomcat server.xml config file
+  - name: "Copy tomcat-server.xml file to remote machine"
+    template: src=server.xml.j2 dest="{{ tomcat_conf }}/server.xml"
+    become: yes
+
+  #Copy catalina.properties config file
+  - name: "Copy catalina.properties file to remote machine"
+    copy: src=files/catalina.properties dest="{{ tomcat_conf }}/catalina.properties" owner=tomcat7
+    become: yes
+
+  #Copy tomcat-users.xml config file
+  - name: "Create and copy tomcat users file"
+    template: src=tomcat-users.xml.j2 dest="{{ tomcat_conf }}/tomcat-users.xml"
+    become: yes
+
+  #Copy environment properties file
+  - name: "Copy tomcat-server.xml file to remote machine"
+    template: src=env-dev.properties.j2 dest="{{ gs_directory }}/env-dev.properties"
+    become: yes
+
+...
