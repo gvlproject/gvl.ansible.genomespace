@@ -5,40 +5,48 @@
   # Author: Madison Flannery
 
   #URL to access GenomeSpace instance
-  gs_url: "madinewgs-ansible.ddns.net"
-  gs_directory: "/home/ubuntu/genomespace"
-  gs_src_directory: "{{ gs_directory }}/SRC/combined"
-  tomcat_conf: "/var/lib/tomcat7/conf"
-  
+  gs_url: ""
+  mongodb_ip: ""
+
   #Filename of SSL certificate
   ssl_cert_filename: "tomcat.cer"
   ssl_keystore_name: "keystore"
 
   #Username and password of test account (this needs to be created)
-  #NOTE: THESE ARE IN TEST_VARS.YML
   admin_username: ""
   admin_password: ""
 
   #Email credentials
-  #NOTE: THESE ARE IN TEST_VARS.YML
   gs_email: ""
   gs_email_smtp: ""
   gs_email_port: ""
   gs_email_password: ""
 
   #Amazon Credentials
-  #NOTE: THESE ARE IN TEST_VARS.YML
   aws_access_id: ""
   aws_secret_key: ""
 
   #Dropbox Credentials
-  #NOTE: THESE ARE IN TEST_VARS.YML
   dropbox_access_id: ""
   dropbox_secret_key: ""
 
+  #Set this to true if you want to add ANDS functionality
+  add_ands: false
+
+  #Swift Credentials for ANDS functionality
+  #NOTE: ANDS functionality is optional
+  swift_username: ""
+  swift_password: ""
+  swift_tenancy: ""
+  swift_endpoint: ""
+  swift_container: ""
+
+  #######################################
+  #DO NOT CHANGE ANYTHING BELOW THIS LINE
+  #######################################
+
   gs_download_link: "https://swift.rc.nectar.org.au:8888/v1/AUTH_eeafd30a213f4abaa6df7c0410b9111b/gs-backups/genomespace-v2.0.tar.gz?temp_url_sig=9856cfeeb5230753c78caaa0e7305400274bf5cb&temp_url_expires=1457664994"
 
-  #TODO: ADD EXTRA ENV VARS
   gs_env:
     { JAVA_HOME: "/usr/lib/jvm/java-8-oracle",
     TOMCAT_HOME: "/var/lib/tomcat7/",
@@ -46,16 +54,10 @@
     CATALINA_HOME: "/usr/share/tomcat7",
     CATALINA_BASE: "/var/lib/tomcat7" }
 
-
-  #Set this to true if you want to add ANDS functionality
-  add_ands: false
-
-  #Swift Credentials for ANDS functionality
-  #NOTE: ANDS functionality is optional
-  #NOTE: THESE ARE IN TEST_VARS.YML
-  swift_username: ""
-  swift_password: ""
-  swift_tenancy: ""
-  swift_endpoint: ""
-  swift_container: ""
+  gs_directory: "/home/ubuntu/genomespace"
+  gs_src_directory: "{{ gs_directory }}/SRC/combined"
+  tomcat_home: "/var/lib/tomcat7"
+  tomcat_conf: "{{ tomcat_home }}/conf"
+  catalina_home: "/usr/share/tomcat7"
+  activemq_directory: "/home/ubuntu/genomespace/activeMQ/apache-activemq-5.9.0/bin"
 ...

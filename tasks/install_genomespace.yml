@@ -32,6 +32,12 @@
     become: yes
     when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
+  #NOTE: THIS NEEDS TO BE TESTED
+  - name: "Start ActiveMQ (for ehcache)"
+    command: "./activemq start"
+    args:
+      chdir: "{{ activemq_directory }}"
+
   # #Create GenomeSpace directory in home folder
   # #NOTE: The completed contents of this folder needs to be copied to /root/genomespace
   # - name: "Create GenomeSpace home directory"

@@ -87,7 +87,7 @@
 
     <Connector port="443" protocol="HTTP/1.1" SSLEnabled="true"
                maxThreads="150" scheme="https" secure="true"
-               clientAuth="false" sslProtocol="TLS" keystoreFile="/home/ubuntu/genomespace/keystore" keystorePass="{{ ssl_pass }}"/>
+               clientAuth="false" sslProtocol="TLS" keystoreFile="conf/keystore" keystorePass="{{ ssl_pass }}"/>
 
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->

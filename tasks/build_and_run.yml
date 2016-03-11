@@ -7,28 +7,21 @@
   #Build GenomeSpace code using mvn command
   #Change directory to /src/combined first
   #Store the stdout for debugging purposes
-  - name: "Building GenomeSpace"
-    command: mvn clean install -PdeployLocal -Dmaven.test.skip=true -DskipTests
+
+  - name: "Building GenomeSpace properties modules"
+    command: mvn install -pl jsui-properties,atm-properties,identityServer-properties,dm-webservice-properties,dm-jobs-properties -Denv-properties-file=/home/ubuntu/genomespace/env-dev.properties
     args:
-      chdir: /mnt/genomespace/SRC/combined/
+      chdir: "{{ gs_src_directory }}"
     environment: "{{ gs_env }}"
     register: out
     become: yes
 
-  #TODO: REMOVE THIS
-  - debug: var=out.stdout
-
-  #Start Virgo server
-  # - name: "Starting Virgo Server"
-  #   shell: startup.sh
-  #   args:
-  #     chdir: /mnt/genomespace/DEVDEPLOY/virgo/bin/
-
-  #Hot deploy config.war and root-webapp.war
-  #Copy war files into directory to auto deploy?
-  #TODO: you need to remove splash before you can deploy root-webapp - How to do this?????
-  #https://www.eclipse.org/virgo/documentation/virgo-documentation-3.5.0.RELEASE/docs/virgo-user-guide/htmlsingle/virgo-user-guide.html#deployment-deploying
-  # docs say - cp helloWorld.war $SERVER_HOME/pickup 
-
+  - name: "Building GenomeSpace"
+    command: mvn clean install  -am -DskipTests -Denv-properties-file=/home/ubuntu/genomespace/env-dev.properties -P deployToLocalTomcat -Dmaven.test.skip=true
+    args:
+      chdir: "{{ gs_src_directory }}"
+    environment: "{{ gs_env }}"
+    register: out
+    become: yes
 
 ...

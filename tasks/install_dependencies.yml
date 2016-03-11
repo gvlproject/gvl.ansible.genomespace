@@ -14,7 +14,6 @@
       register: java_dir
 
     #If Java not installed, print debug message
-    #TODO: REMOVE THIS?
     - debug: msg="Java has not been installed"
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
@@ -32,7 +31,6 @@
       file: path=/usr/lib/jvm/ state=directory mode=0755
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
       become: yes
-
 
     #Unarchive the Java .tar.gz downloaded file
     #Only complete if Java has not been previously installed
@@ -128,7 +126,7 @@
 
     #Start MongoDB service
     - name: "Start MongoDB service (mongod)"
-      service: name=mongod state=started
+      service: name=mongod state=restarted sleep=20
 
     # #Install ActiveMQ (For ehcache)
     # - name: "Download ActiveMQ"

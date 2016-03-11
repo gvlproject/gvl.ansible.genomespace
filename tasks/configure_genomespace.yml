@@ -8,7 +8,7 @@
   #Change all URLs in the GenomeSpace code & associated files
   #Get the list of files to change, exclude any .class files
   - name: "Get list of files which require URL to be changed"
-    find: paths="{{ gs_directory }}/SRC/combined/" recurse=yes contains=".*genomespace-test.genome.edu.au.*" pattern=".*\.(?!class)" use_regex=True
+    find: paths="{{ gs_src_directory }}" recurse=yes contains=".*put-url-here.*" pattern=".*\.(?!class)" use_regex=True
     register: gsfiles
 
   #Insert correct URLs in placeholder spots
@@ -23,12 +23,16 @@
     copy: src="files/{{ ssl_keystore_name }}" dest="{{ gs_directory }}" owner=ubuntu mode=0600
     become: yes
 
+  #Copy keystore across
+  - name: "Copy SSL keystore to remote machine"
+    copy: src="files/{{ ssl_keystore_name }}" dest="{{ tomcat_conf }}" owner=ubuntu mode=0600
+    become: yes
+
   #Copy SSL certificate across
   - name: "Copy SSL certificate to remote machine"
     copy: src="files/{{ ssl_cert_filename }}" dest="{{ gs_directory }}" owner=ubuntu mode=0600
     become: yes
 
-  #TODO: SHOULD THIS BE REMOVED LATER??
   #Delete existing cert in keystore - this ensures next step will not fail if script run multiple times
   #ignore_errors is set as this will throw error if certificate doesn't exist in java keystore
   - name: "Delete existing SSL certificate from Java keystore"
@@ -54,46 +58,55 @@
   - name: "Move to GenomeSpace secret key file to correct place"
     command: mv /home/ubuntu/genomespace-secret.key /home/ubuntu/genomespace/
 
-  # #Copy tomcat-server.xml config file
-  # #TODO: Check if this will need to be different for a non self-signed cert
-  # - name: "Copy tomcat-server.xml file to remote machine"
-  #   copy: src=files/tomcat-server.xml dest="{{ gs_virgo_directory }}/config/" owner=ubuntu
-  #   become: yes
-  #
-  # #Set AWS Credentials in genomespace-aws.properties file
-  # - name: "Create and copy the AWS credentials file"
-  #   template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
+  #Create and copy tomcat server.xml config file
+  - name: "Copy tomcat-server.xml file to remote machine"
+    template: src=server.xml.j2 dest="{{ tomcat_conf }}/server.xml"
+    become: yes
+
+  #Copy catalina.properties config file
+  - name: "Copy catalina.properties file to remote machine"
+    copy: src=files/catalina.properties dest="{{ tomcat_conf }}/catalina.properties" owner=tomcat7
+    become: yes
+
+  #Copy catalina.properties config file
+  - name: "Copy tomcat7 config file to remote machine"
+    copy: src=files/tomcat7 dest="/etc/default/tomcat7" owner=tomcat7
+    become: yes
+
+  #Create and copy tomcat-users.xml config file
+  - name: "Create and copy tomcat users file"
+    template: src=tomcat-users.xml.j2 dest="{{ tomcat_conf }}/tomcat-users.xml"
+    become: yes
+
+  #Create and copy environment properties file
+  - name: "Create and copy environment properties file to remote machine"
+    template: src=env-dev.properties.j2 dest="{{ gs_directory }}/env-dev.properties"
+    become: yes
+
+  - name: "Ensure tomcat files have correct owner"
+    command: "chown -R tomcat7:tomcat7 {{ tomcat_home }}"
+
+  - name: "Ensure tomcat files have correct owner"
+    command: "chown -R tomcat7:tomcat7 {{ catalina_home }}"
+
+  #Set AWS Credentials in genomespace-aws.properties file
+  - name: "Create and copy the AWS credentials file"
+    template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
+
+  #Set Dropbox Credentials in genomespace-aws.properties file
+  - name: "Create and copy the Dropbox credentials file"
+    template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-dropbox.properties"
   #
   # #Set AWS Credentials, Dropbox credentials in dm-webservice server.properties file
   # - name: "Create and copy dm-webservice server.properties file"
   #   template: src=dmwebservice_server_properties.j2 dest="{{ gs_directory }}/SRC/combined/dm-webservice-properties/src/main/resources/server.properties"
   #   become: yes
-  #
-  # #Set AWS Credentials, Dropbox credentials in dm-jobs server.properties file
-  # - name: "Create and copy dm-jobs server.properties file"
-  #   template: src=dmjobs_server_properties.j2 dest="{{ gs_src_directory }}/dm-jobs-properties/src/main/resources/server.properties"
-  #   become: yes
-  #
-  # #Set email account credentials in identityServer server.properties file
-  # - name: "Create and copy identityServer server.properties file"
-  #   template: src=identityserver_server_properties.j2 dest="{{ gs_src_directory }}/identityServer-properties/src/main/resources/server.properties"
-  #   become: yes
-  #
-  # #Set email account credentials in identityServer server.properties file
-  # - name: "Create and copy ATM server.properties file"
-  #   template: src=atm_server_properties.j2 dest="{{ gs_src_directory }}/atm-properties/src/main/resources/server.properties"
-  #   become: yes
-  #
+
   # #Set ANDS in dm-webservice server.properties file
   # #TODO: Remove credentials from source code
   # - name: "Create and copy ANDS java class file"
   #   template: src=ANDSpublisher.java.j2 dest="{{ gs_src_directory }}/dm-core/src/main/java/org/genomespace/datamanager/doi/ANDSPublisher.java"
   #   become: yes
   #   when: add_ands
-  #
-  # #Copy completed ~/genomespace folder to /root/genomespace
-  # - name: "Copy completed ~/genomespace folder"
-  #   command: cp -r /home/ubuntu/genomespace /root/
-  #   become: yes
 
 ...

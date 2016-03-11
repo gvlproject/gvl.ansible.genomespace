@@ -33,9 +33,9 @@ global.deploymentEnvironment=dev
 global.defaultBucketName=genomespace-dev
 global.cacheReplication.jmsProviderUrl=tcp://localhost:61616
 
-global.dropbox.secretKey=xxxxx
-global.dropbox.encodedKey=xxxx
-global.dropbox.appId=xxxxx
+global.dropbox.secretKey={{ dropbox_secret_key }}
+global.dropbox.encodedKey={{ dropbox_encoded_key }}
+global.dropbox.appId={{ dropbox_access_id }}
 
 global.googledrive.clientId=xxx
 global.googledrive.clientSecret=xxx
@@ -58,6 +58,6 @@ global.cacheReplication.prefix=dev
 
 global.mongodb.databaseName=gs-dev
 
-global.mongodb.host=115.146.86.104
+global.mongodb.host={{ mongodb_ip }}
 
 global.mongodb.port=27017
