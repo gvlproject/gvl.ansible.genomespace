@@ -45,7 +45,7 @@
   #DO NOT CHANGE ANYTHING BELOW THIS LINE
   #######################################
 
-  gs_download_link: "https://swift.rc.nectar.org.au:8888/v1/AUTH_eeafd30a213f4abaa6df7c0410b9111b/gs-backups/genomespace-v2.0.tar.gz?temp_url_sig=9856cfeeb5230753c78caaa0e7305400274bf5cb&temp_url_expires=1457664994"
+  gs_download_link: "https://swift.rc.nectar.org.au:8888/v1/AUTH_eeafd30a213f4abaa6df7c0410b9111b/gs-backups/genomespace-v2.0.tar.gz?temp_url_sig=b1ffd53e6b68498eeb1d420f260cb71ae07a91ef&temp_url_expires=1458879623"
 
   gs_env:
     { JAVA_HOME: "/usr/lib/jvm/java-8-oracle",

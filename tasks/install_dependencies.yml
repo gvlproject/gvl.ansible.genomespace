@@ -124,9 +124,9 @@
         - "echo \"mongodb-org-mongos hold\" | sudo dpkg --set-selections"
         - "echo \"mongodb-org-tools hold\" | sudo dpkg --set-selections"
 
-    #Start MongoDB service
-    - name: "Start MongoDB service (mongod)"
-      service: name=mongod state=restarted sleep=20
+    # #Start MongoDB service
+    # - name: "Start MongoDB service (mongod)"
+    #   service: name=mongod state=restarted sleep=20
 
     # #Install ActiveMQ (For ehcache)
     # - name: "Download ActiveMQ"

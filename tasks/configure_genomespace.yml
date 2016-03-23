@@ -25,7 +25,7 @@
 
   #Copy keystore across
   - name: "Copy SSL keystore to remote machine"
-    copy: src="files/{{ ssl_keystore_name }}" dest="{{ tomcat_conf }}" owner=ubuntu mode=0600
+    copy: src="files/{{ ssl_keystore_name }}" dest="{{ tomcat_conf }}" owner=ubuntu mode=0600 force=yes
     become: yes
 
   #Copy SSL certificate across
