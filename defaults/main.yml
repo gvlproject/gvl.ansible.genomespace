@@ -57,7 +57,7 @@
   gs_directory: "/home/ubuntu/genomespace"
   gs_src_directory: "{{ gs_directory }}/SRC/combined"
   tomcat_home: "/var/lib/tomcat7"
-  tomcat_conf: "{{ tomcat_home }}/conf"
+  tomcat_conf: "/etc/tomcat7"
   catalina_home: "/usr/share/tomcat7"
   activemq_directory: "/home/ubuntu/genomespace/activeMQ/apache-activemq-5.9.0/bin"
 ...

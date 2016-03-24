@@ -85,17 +85,19 @@
 
   - name: "Ensure tomcat files have correct owner"
     command: "chown -R tomcat7:tomcat7 {{ tomcat_home }}"
+    become: yes
 
   - name: "Ensure tomcat files have correct owner"
     command: "chown -R tomcat7:tomcat7 {{ catalina_home }}"
+    become: yes
 
   #Set AWS Credentials in genomespace-aws.properties file
   - name: "Create and copy the AWS credentials file"
-    template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
+    template: src=genomespace-aws.properties.j2 dest="/home/ubuntu/genomespace/genomespace-aws.properties"
 
   #Set Dropbox Credentials in genomespace-aws.properties file
   - name: "Create and copy the Dropbox credentials file"
-    template: src=genomespace-aws-properties.j2 dest="/home/ubuntu/genomespace/genomespace-dropbox.properties"
+    template: src=genomespace-dropbox.properties.j2 dest="/home/ubuntu/genomespace/genomespace-dropbox.properties"
   #
   # #Set AWS Credentials, Dropbox credentials in dm-webservice server.properties file
   # - name: "Create and copy dm-webservice server.properties file"
