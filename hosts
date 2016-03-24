@@ -1,6 +1,6 @@
 [nectar]
-115.146.94.35
+115.146.87.6
 
 [nectar:vars]
 ansible_user=ubuntu
-ansible_ssh_private_key_file=~/Documents/nectar/madi_nectar_keypair2.pem
+ansible_ssh_private_key_file=~/Documents/nectar/cloudman_key_pair-key.pem.txt

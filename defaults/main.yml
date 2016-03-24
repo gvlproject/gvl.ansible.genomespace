@@ -59,6 +59,6 @@
     VIRGO_HOME: "/mnt/genomespace/DEVDEPLOY/virgo",
     JAVA_TOOL_OPTIONS: "-Xmx4096m -XX:MaxPermSize=4096m" }
 
-  gs_download_link: "https://swift.rc.nectar.org.au:8888/v1/AUTH_377/GenomeSpace-Ansible/genomespace-ansible.tar.gz?temp_url_sig=6870cd886a001a5da6aa437ee112ac685b672e60&temp_url_expires=1457652374"
+  gs_download_link: "https://swift.rc.nectar.org.au:8888/v1/AUTH_377/GenomeSpace-Ansible/genomespace-ansible.tar.gz"
 
 ...

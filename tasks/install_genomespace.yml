@@ -13,6 +13,12 @@
   - debug: msg="GenomeSpace has not been installed"
     when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
+  #Only complete if Java has not been previously installed
+  - name: "Make GenomeSpace directory"
+    file: path=/mnt/genomespace state=directory mode=0755
+    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
+    become: yes
+
   #Grab GenomeSpace code and server etc from object store
   #Only complete if GenomeSpace not previously installed
   - name: "Download GenomeSpace"
@@ -23,16 +29,16 @@
   #Unpack the GenomeSpace archive
   #Only complete if GenomeSpace not previously installed
   - name: "Unarchive downloaded GenomeSpace files"
-    unarchive: src=/mnt/genomespace-ansible-v1.0.tar.gz dest=/mnt/ copy=no
+    unarchive: src=/mnt/genomespace-ansible-v1.0.tar.gz dest=/mnt/genomespace copy=no
     become: yes
     when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
   #Move file contents and remove lower level folder
   #Only complete if GenomeSpace not previously installed
-  - name: "Clean up GenomeSpace directory structure"
-    command: "mv /mnt/genomespace-ansible-v1.0 {{ gs_directory }}"
-    become: yes
-    when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
+  # - name: "Clean up GenomeSpace directory structure"
+  #   command: "mv /mnt/genomespace-ansible-v1.0 {{ gs_directory }}"
+  #   become: yes
+  #   when: genomespace_src_dir.stat.isdir is not defined or not genomespace_src_dir.stat.isdir
 
   #Create GenomeSpace directory in home folder
   #NOTE: The completed contents of this folder needs to be copied to /root/genomespace
