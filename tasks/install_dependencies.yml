@@ -46,9 +46,8 @@
       become: yes
       when: java_dir.stat.isdir is not defined or not java_dir.stat.isdir
 
-    #Install maven & mercurial (& lxde & vim)
-    #TODO: lxde & vim for debugging purposes - remove this later??
-    - name: "Install Maven and Mercurial"
+    #Install maven & mercurial & tomcat7 (& lxde & vim)
+    - name: "Install Maven, Mercurial and Tomcat7"
       apt: pkg={{ item }} state=installed
       with_items:
           - maven
@@ -60,8 +59,7 @@
       become: yes
 
     #Set environment variables - 4 files /.bashrc /.profile for ubuntu and root.
-    #NOTE: This only exists for debugging purposes - ansible env used everywhere else
-    #TODO: Remove this?
+    #NOTE: This only exists for debugging purposes/logging in purposes - ansible env used everywhere else
     - name: "Setting environment variables"
       become: yes
       lineinfile: dest={{ item[0] }} line={{ item[1] }} state=present
@@ -80,68 +78,20 @@
       args:
         executable: /bin/bash
 
-    #Install MongoDB version 2.6.6
-    - name: "Apt-key for installing MongoDB"
-      command: apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+    #Install ActiveMQ (For ehcache)
+    - name: "Download ActiveMQ"
+      get_url: url="http://archive.apache.org/dist/activemq/apache-activemq/5.9.0/apache-activemq-5.9.0-bin.tar.gz"
+
+    #Make directory for ActiveMQ installation
+    #Only complete if Java has not been previously installed
+    - name: "Make ActiveMQ directory"
+      file: path="{{ gs_directory }}/activeMQ" state=directory mode=0755
       become: yes
 
-    #Add repository for MongoDB so apt-get can install it
-    - name: ensure file exists
-      become: yes
-      copy:
-        content: "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen"
-        dest: /etc/apt/sources.list.d/mongodb.list
-        force: no
-        group: sys
-        owner: root
-        mode: 0555
+    #Unpack ActiveMQ file
+    - name: "Unpack ActiveMQ tarball"
+      unarchive: src=apache-activemq-5.9.0-bin.tar.gz dest="{{ gs_directory }}"
 
-      #command: "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list"
-
-    #Install MongoDB packages
-    #sudo apt-get install -y mongodb-org=2.6.6 mongodb-org-server=2.6.6 mongodb-org-shell=2.6.6 mongodb-org-mongos=2.6.6 mongodb-org-tools=2.6.6
-    - name: "sudo apt-get update"
-      apt: update_cache=yes
-      become: yes
-
-    - name: "Install MongoDB"
-      apt: pkg={{ item }} state=installed
-      become: yes
-      with_items:
-        - mongodb-org=2.6.6
-        - mongodb-org-server=2.6.6
-        - mongodb-org-shell=2.6.6
-        - mongodb-org-mongos=2.6.6
-        - mongodb-org-tools=2.6.6
-
-    #TODO: FIGURE OUT WHAT THIS DOES
-    - name: "Configure MongoDB"
-      command: "{{ item }}"
-      with_items:
-        - "echo \"mongodb-org hold\" | sudo dpkg --set-selections"
-        - "echo \"mongodb-org-server hold\" | sudo dpkg --set-selections"
-        - "echo \"mongodb-org-shell hold\" | sudo dpkg --set-selections"
-        - "echo \"mongodb-org-mongos hold\" | sudo dpkg --set-selections"
-        - "echo \"mongodb-org-tools hold\" | sudo dpkg --set-selections"
-
-    # #Start MongoDB service
-    # - name: "Start MongoDB service (mongod)"
-    #   service: name=mongod state=restarted sleep=20
-
-    # #Install ActiveMQ (For ehcache)
-    # - name: "Download ActiveMQ"
-    #   get_url: url="http://archive.apache.org/dist/activemq/apache-activemq/5.9.0/apache-activemq-5.9.0-bin.tar.gz"
-    #
-    # #Make directory for ActiveMQ installation
-    # #Only complete if Java has not been previously installed
-    # - name: "Make ActiveMQ directory"
-    #   file: path="{{ gs_directory }}/activeMQ" state=directory mode=0755
-    #   become: yes
-    #
-    # #Unpack ActiveMQ file
-    # - name: "Unpack ActiveMQ tarball"
-    #   unarchive: src=apache-activemq-5.9.0-bin.tar.gz dest="{{ gs_directory }}"
-    #
-    # - name: "Move ActiveMQ to the right place"
-    #   command: "mv apache-activemq-5.9.0 activeMQ/"
+    - name: "Move ActiveMQ to the right place"
+      command: "mv apache-activemq-5.9.0 activeMQ/"
 ...

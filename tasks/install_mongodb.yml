@@ -1,0 +1,53 @@
+---
+    #Ansible script contaning tasks for installing MongoDB 2.6.6.
+    #
+    # Author: Madison Flannery
+
+    #Install MongoDB version 2.6.6
+    - name: "Apt-key for installing MongoDB"
+      command: apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+      become: yes
+
+    #Add repository for MongoDB so apt-get can install it
+    - name: ensure file exists
+      become: yes
+      copy:
+        content: "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen"
+        dest: /etc/apt/sources.list.d/mongodb.list
+        force: no
+        group: sys
+        owner: root
+        mode: 0555
+
+      #command: "echo 'deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen' | sudo tee /etc/apt/sources.list.d/mongodb.list"
+
+    #Install MongoDB packages
+    #sudo apt-get install -y mongodb-org=2.6.6 mongodb-org-server=2.6.6 mongodb-org-shell=2.6.6 mongodb-org-mongos=2.6.6 mongodb-org-tools=2.6.6
+    - name: "sudo apt-get update"
+      apt: update_cache=yes
+      become: yes
+
+    - name: "Install MongoDB"
+      apt: pkg={{ item }} state=installed
+      become: yes
+      with_items:
+        - mongodb-org=2.6.6
+        - mongodb-org-server=2.6.6
+        - mongodb-org-shell=2.6.6
+        - mongodb-org-mongos=2.6.6
+        - mongodb-org-tools=2.6.6
+
+    #TODO: FIGURE OUT WHAT THIS DOES
+    - name: "Configure MongoDB"
+      command: "{{ item }}"
+      with_items:
+        - "echo \"mongodb-org hold\" | sudo dpkg --set-selections"
+        - "echo \"mongodb-org-server hold\" | sudo dpkg --set-selections"
+        - "echo \"mongodb-org-shell hold\" | sudo dpkg --set-selections"
+        - "echo \"mongodb-org-mongos hold\" | sudo dpkg --set-selections"
+        - "echo \"mongodb-org-tools hold\" | sudo dpkg --set-selections"
+
+    #Start MongoDB service
+    - name: "Start MongoDB service (mongod)"
+      service: name=mongod state=restarted sleep=20
+...
