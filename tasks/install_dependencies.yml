@@ -80,12 +80,12 @@
 
     #Install ActiveMQ (For ehcache)
     - name: "Download ActiveMQ"
-      get_url: url="http://archive.apache.org/dist/activemq/apache-activemq/5.9.0/apache-activemq-5.9.0-bin.tar.gz"
+      get_url: url="http://archive.apache.org/dist/activemq/apache-activemq/5.9.0/apache-activemq-5.9.0-bin.tar.gz" dest="{{ gs_directory }}"
 
     #Make directory for ActiveMQ installation
     #Only complete if Java has not been previously installed
     - name: "Make ActiveMQ directory"
-      file: path="{{ gs_directory }}/activeMQ" state=directory mode=0755
+      file: path="{{ gs_directory }}/activeMQ" state=directory mode=0755 recurse=yes
       become: yes
 
     #Unpack ActiveMQ file
